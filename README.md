@@ -13,3 +13,10 @@ Het project is opgebouwd uit:
  2. Een database
  3. Stuk hardware 
  4. BIM onderdelen
+
+ # Gebruikte Libraries
+ 1. [flask python](https://flask.palletsprojects.com/en/2.2.x/)\
+wordt gebruikt om via het dashboard de back-end te benaderen, via een web URL.\
+Om de webserver te starten, gebruik je het commando: ``flask (bestandnaam zonder .py) run``\
+Daarna is de webserver te bereiken via: ``localhost:5000/functienaam``
+
