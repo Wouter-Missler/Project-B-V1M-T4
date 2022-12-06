@@ -19,4 +19,7 @@ Het project is opgebouwd uit:
 wordt gebruikt om via het dashboard de back-end te benaderen, via een web URL.\
 Om de webserver te starten, gebruik je het commando: ``flask (bestandnaam zonder .py) run``\
 Daarna is de webserver te bereiken via: ``localhost:5000/functienaam``
+ 2. [flask-cors](https://flask-cors.readthedocs.io/en/latest/)\
+wordt gebruikt om de webserver te laten communiceren met de database. Door de CORS (Cross-Origin Resource Sharing) te activeren, kan de webserver de database benaderen.
+Deze library wordt gebruikt door de command ``CORS(app)`` in de app.py te zetten. Hierdoor worden de CORS headers aangepast en kan de webserver de database benaderen.
 
