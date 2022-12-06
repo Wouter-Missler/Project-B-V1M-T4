@@ -1,5 +1,8 @@
 from flask import Flask  # importeer de Flask class
+from flask_cors import CORS
+
 app = Flask(__name__)  # maak een instantie van de Flask class
+CORS(app)
 
 # --
 
