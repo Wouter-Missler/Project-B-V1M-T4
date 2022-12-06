@@ -1,6 +1,6 @@
 # sass cache
-.main.sass
-.main.css.map
+*.sass
+*.css.map
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
