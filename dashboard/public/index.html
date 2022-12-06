@@ -29,9 +29,19 @@
   <p>Dashboard pagina</p>
 
   <script>
-    // TODO
     // laden via Flask api op test branch
     // url: https://woutm.eu.pythonanywhere.com/test
+
+    async function testData(url) {
+      const response = await fetch(url); // wacht tot de data binnen is
+      var data = await response.json(); // zet de data om naar json
+
+      return data; // return de data
+    }
+
+    testData("https://woutm.eu.pythonanywhere.com/test").then(data => {
+      console.log(data); // log de data van de test branch van de flask api
+    });
   </script>
 </body>
 
