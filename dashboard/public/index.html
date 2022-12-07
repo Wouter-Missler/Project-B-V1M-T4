@@ -26,7 +26,8 @@
 </head>
 
 <body>
-  <p>Dashboard pagina</p>
+  <h1>Dashboard pagina</h1>
+  <p>Test data: <span id="testData"></span></p>
 
   <script>
     // laden via Flask api op test branch
@@ -41,6 +42,8 @@
 
     testData("https://woutm.eu.pythonanywhere.com/test").then(data => {
       console.log(data); // log de data van de test branch van de flask api
+
+      document.getElementById("testData").innerHTML = data.text; // zet de data in de html
     });
   </script>
 </body>
