@@ -19,5 +19,5 @@ def hello_world():  # maak een functie die de index pagina weergeeft
 
 @app.route("/test")  # maak een route naar een test pagina
 def test():  # maak een functie die de test pagina weergeeft
-    # geef als output json met de tekst "Test"
-    return {"test": "Test"}
+    # geef als output json data
+    return {"text": "Dit is een stukje data uit het app.py bestand"}
