@@ -28,7 +28,8 @@ def test():  # maak een functie die de test pagina weergeeft
 
 @app.route("/api")
 def api():
-    # load from steam api
+    steamID = request.args.get("steamID")
+
     session = requests.Session()
     infile = session.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
                          steamAPIKey + "&steamids=76561198000000000")

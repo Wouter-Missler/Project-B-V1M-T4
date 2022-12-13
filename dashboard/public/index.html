@@ -29,6 +29,10 @@
   <h1>Dashboard pagina</h1>
   <p>Test data: <span id="testData"></span></p>
   <button onclick="laadData();">Laad de data</button>
+  <hr>
+  <input type="text" id="steamIDInput" placeholder="steamID..">
+  <button onclick="getUserData();">Pak steam user data met ingevoerde steamID</button>
+  <p id="userData">Hier komt de steam data</p>
 
   <script>
     // laden via Flask api op test branch
@@ -49,7 +53,18 @@
         console.log(data); // log de data van de test branch van de flask api
 
         dataElement.innerHTML = data.text; // zet de data in de html
-      }); 
+      });
+    }
+
+    function getUserData() {
+      let steamID = document.getElementById("steamIDInput").value; // haal de steamID op uit de input
+      let userDataElement = document.getElementById("userData"); // haal het element op waar de data in moet
+
+      userDataElement.innerHTML = "Laden..."; // zet de text op een placeholder tijdens laden
+
+      loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api?steamID=" + steamID).then(data => {
+        userDataElement.innerHTML = JSON.stringify(data); // zet de data in de html
+      });
     }
   </script>
 </body>
