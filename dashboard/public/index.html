@@ -28,6 +28,7 @@
 <body>
   <h1>Dashboard pagina</h1>
   <p>Test data: <span id="testData"></span></p>
+  <button onclick="laadData();">Laad de data</button>
 
   <script>
     // laden via Flask api op test branch
@@ -40,11 +41,16 @@
       return data; // return de data
     }
 
-    testData("https://woutm.eu.pythonanywhere.com/test").then(data => {
-      console.log(data); // log de data van de test branch van de flask api
+    function laadData() {
+      let dataElement = document.getElementById("testData"); // haal de element op
+      dataElement.innerHTML = "Laden..."; // zet de text op laden
 
-      document.getElementById("testData").innerHTML = data.text; // zet de data in de html
-    });
+      testData("https://woutm.eu.pythonanywhere.com/test").then(data => {
+        console.log(data); // log de data van de test branch van de flask api
+
+        dataElement.innerHTML = data.text; // zet de data in de html
+      }); 
+    }
   </script>
 </body>
 
