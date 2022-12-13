@@ -1,7 +1,8 @@
-from flask import Flask, request, json  # importeer de Flask class
+from flask import Flask, request  # importeer de Flask class
 from flask_cors import CORS
-from urllib.request import urlopen
-import ijson
+import requests
+
+steamAPIKey = "A862570CC2139926066420C4E9A5A927"
 
 app = Flask(__name__)  # maak een instantie van de Flask class
 CORS(app)
@@ -25,15 +26,13 @@ def test():  # maak een functie die de test pagina weergeeft
     return {"text": "Dit is een stukje data uit het app.py bestand :)"}
 
 
-@app.route("/json")  # maak een route naar de data pagina
-def steamdata():
-    # f = urlopen('localhost:5000/steam.json')
-    f = open("./steam.json")
-    # objects = ijson.items(f, '.name')
-    # print(objects)
-    # for o in objects:
-    #     print(o)
+@app.route("/api")
+def api():
+    # load from steam api
+    session = requests.Session()
+    infile = session.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
+                         steamAPIKey + "&steamids=76561198000000000")
+    data = infile.json()
 
-    inhoud = json.load(f)
-    print(inhoud[0]['name'])
-    return {"text": "test"}
+    firstname = data["response"]["players"][0]["personaname"]
+    return {"name": firstname}
