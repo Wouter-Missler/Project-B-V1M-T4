@@ -34,7 +34,7 @@
     // laden via Flask api op test branch
     // url: https://woutm.eu.pythonanywhere.com/test
 
-    async function testData(url) {
+    async function loadDataFromUrl(url) {
       const response = await fetch(url); // wacht tot de data binnen is
       var data = await response.json(); // zet de data om naar json
 
@@ -43,9 +43,9 @@
 
     function laadData() {
       let dataElement = document.getElementById("testData"); // haal de element op
-      dataElement.innerHTML = "Laden..."; // zet de text op laden
+      dataElement.innerHTML = "Laden..."; // zet de text op een placeholder tijdens laden
 
-      testData("https://woutm.eu.pythonanywhere.com/test").then(data => {
+      loadDataFromUrl("https://woutm.eu.pythonanywhere.com/test").then(data => {
         console.log(data); // log de data van de test branch van de flask api
 
         dataElement.innerHTML = data.text; // zet de data in de html
