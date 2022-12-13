@@ -1,6 +1,6 @@
-from flask import Flask, request  # importeer de Flask class
+import os
+from flask import Flask, request, json, url_for  # importeer de Flask class
 from flask_cors import CORS
-import json
 
 app = Flask(__name__)  # maak een instantie van de Flask class
 CORS(app)
@@ -26,6 +26,10 @@ def test():  # maak een functie die de test pagina weergeeft
 
 @app.route("/json")  # maak een route naar de data pagina
 def steamdata():
-    infile = open("./steam.json")
-    inhoud = json.load(infile)
-    return {"name": inhoud[0]['name']}
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "static/data", "steam.json")
+    data = json.load(open(json_url))
+
+    # infile = open("./steam.json")
+    # inhoud = json.load(infile)
+    return {"name": data[0]['name']}
