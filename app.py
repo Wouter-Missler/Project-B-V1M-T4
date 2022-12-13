@@ -35,5 +35,5 @@ def api():
         "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}".format(steamAPIKey, steamID))
     data = infile.json()
 
-    firstname = data["response"]["players"][0]["personaname"]
-    return {"name": firstname}
+    firstPlayer = data["response"]["players"][0]
+    return firstPlayer
