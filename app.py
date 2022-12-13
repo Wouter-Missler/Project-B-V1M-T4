@@ -1,5 +1,6 @@
-from flask import Flask, request  # importeer de Flask class
+from flask import Flask, request, json  # importeer de Flask class
 from flask_cors import CORS
+from urllib.request import urlopen
 import ijson
 
 app = Flask(__name__)  # maak een instantie van de Flask class
@@ -26,9 +27,13 @@ def test():  # maak een functie die de test pagina weergeeft
 
 @app.route("/json")  # maak een route naar de data pagina
 def steamdata():
-    f = urlopen('./steam.json')
-    objects = ijson.items(f, 'name')
+    # f = urlopen('localhost:5000/steam.json')
+    f = open("./steam.json")
+    # objects = ijson.items(f, '.name')
+    # print(objects)
+    # for o in objects:
+    #     print(o)
 
-    # infile = open("./steam.json")
-    # inhoud = json.load(infile)
-    return {"text": objects[0]}
+    inhoud = json.load(f)
+    print(inhoud[0]['name'])
+    return {"text": "test"}
