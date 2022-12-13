@@ -27,6 +27,6 @@ def test():  # maak een functie die de test pagina weergeeft
 def steamdata():
     infile = open("steam.json")
     inhoud = json.load(infile)
-    return inhoud
+    return inhoud[0]
 
 
