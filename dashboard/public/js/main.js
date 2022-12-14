@@ -55,4 +55,7 @@ function changeUser() {
 
     // sla de steamID op in de localstorage
     localStorage.setItem("steamID", steamID);
+
+    // update de gebruikers data
+    updateUser();
 }
