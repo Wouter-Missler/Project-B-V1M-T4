@@ -1,0 +1,264 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html:root {
+  --darkest-blue: #171A21;
+  --dark-blue: #1B2838;
+  --blue: #2A475E;
+  --light-blue: #66C0F4;
+  --light-gray: #C7D5E0;
+  --main-font: 'Poppins', sans-serif;
+  --mono-font: 'Roboto Mono', monospace;
+}
+
+body {
+  background-color: var(--darkest-blue);
+  font-family: var(--main-font);
+}
+
+header {
+  height: 85px;
+  background-color: var(--dark-blue);
+  display: -ms-grid;
+  display: grid;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+header .logo {
+  width: 85px;
+  height: 85px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+header .logo img {
+  width: 45px;
+}
+
+header .search {
+  margin: 0 auto;
+  width: 350px;
+  height: 45px;
+  background-color: var(--blue);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 10px;
+}
+
+header .search input {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  color: var(--light-gray);
+  font-size: 18px;
+  font-family: var(--main-font);
+}
+
+header .search input::-webkit-input-placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .search input:-ms-input-placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .search input::-ms-input-placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .search input::placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .search input:focus {
+  outline: none;
+}
+
+header .search button {
+  width: 45px;
+  height: 45px;
+  background-color: transparent;
+  border: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+}
+
+header .right-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+header .right-group .block-add {
+  margin: 0 25px 0 auto;
+}
+
+header .right-group .block-add button {
+  height: 45px;
+  padding: 0 15px;
+  background-color: var(--light-blue);
+  border: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+  font-family: var(--main-font);
+  font-weight: 500;
+}
+
+header .right-group .block-add button i {
+  margin-left: 5px;
+  color: var(--darkest-blue);
+  font-size: 18px;
+  line-height: 0;
+}
+
+header .right-group .block-add .block-add-popup {
+  display: none;
+}
+
+header .right-group .user {
+  width: 85px;
+  height: 85px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+header .right-group .user .user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+header .right-group .user .user-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 2px solid var(--darkest-blue);
+}
+
+header .right-group .user .user-popup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--blue);
+  width: 300px;
+  height: 200px;
+  padding: 15px;
+  text-align: center;
+}
+
+header .right-group .user .user-popup.hidden {
+  display: none;
+}
+
+header .right-group .user .user-popup::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 32px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--blue);
+}
+
+header .right-group .user .user-popup h3 {
+  font-weight: 500;
+  color: var(--light-gray);
+  margin: 15px 0 30px 0;
+}
+
+header .right-group .user .user-popup .user-id .id {
+  background-color: var(--light-gray);
+  height: 30px;
+  width: 170px;
+  display: inline-block;
+  line-height: 30px;
+}
+
+header .right-group .user .user-popup .user-id .block {
+  font-weight: 500;
+  background-color: var(--light-blue);
+  width: 30px;
+  height: 30px;
+  color: var(--darkest-blue);
+  margin-bottom: 15px;
+  font-weight: 600;
+  display: inline-block;
+  line-height: 30px;
+}
+
+header .right-group .user .user-popup button {
+  width: 200px;
+  height: 30px;
+  background-color: var(--light-blue);
+  border: none;
+  cursor: pointer;
+  font-family: var(--main-font);
+  font-weight: 600;
+}
+
+header .right-group .user .user-popup button i {
+  margin-left: 5px;
+  color: var(--darkest-blue);
+  font-size: 18px;
+  line-height: 0;
+}
+/*# sourceMappingURL=main.css.map */

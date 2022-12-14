@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project Steam Dashboard</title>
 
+  <link rel="stylesheet" href="./css/main.css">
+
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/9.14.0/firebase-app-compat.js"></script>
   <!-- include only the Firebase features as you need -->
@@ -26,47 +28,50 @@
 </head>
 
 <body>
-  <h1>Dashboard pagina</h1>
+  <!-- <h1>Dashboard pagina</h1>
   <p>Test data: <span id="testData"></span></p>
   <button onclick="laadData();">Laad de data</button>
   <hr>
   <input type="text" id="steamIDInput" placeholder="steamID..">
   <button onclick="getUserData();">Pak steam user data met ingevoerde steamID</button>
-  <p id="userData">Hier komt de steam data</p>
+  <p id="userData">Hier komt de steam data</p> -->
 
-  <script>
-    // laden via Flask api op test branch
-    // url: https://woutm.eu.pythonanywhere.com/test
+  <header>
+    <div class="logo">
+      <img src="./assets/steam-logo.svg" alt="Project Steam logo">
+    </div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Zoek tussen blokken..">
+      <button onclick="alert('tijd om te zoeken');">
+        <i><img src="./assets/search-icon.svg" alt="Search Icon"></i>
+      </button>
+    </div>
+    <div class="right-group">
+      <div class="block-add">
+        <button onclick="alert('blok toevoegen tijd')">Blok Toevoegen<i><img src="./assets/plus-icon.svg"
+              alt="Plus Icon"></i></button>
+        <div class="block-add-popup">
+          <h3>Kies een type blok:</h3>
+          <button>Speeltijd</button>
+          <button>Speeltijd</button>
+          <button>Speeltijd</button>
+          <button>Speeltijd</button>
+        </div>
+      </div>
+      <div class="user">
+        <div class="user-avatar">
+          <img src="./assets/avatar-placeholder.jpg" alt="User Avatar">
+        </div>
+        <div class="user-popup hidden">
+          <h3 class="username">Huidige gebruiker: <span id="user-name"></span></h3>
+          <p class="user-id"><span class="block">ID</span><span class="id" id="userPopupID">loading</span></p>
+          <button onclick="changeUser();">Verander gebruiker</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-    async function loadDataFromUrl(url) {
-      const response = await fetch(url); // wacht tot de data binnen is
-      var data = await response.json(); // zet de data om naar json
-
-      return data; // return de data
-    }
-
-    function laadData() {
-      let dataElement = document.getElementById("testData"); // haal de element op
-      dataElement.innerHTML = "Laden..."; // zet de text op een placeholder tijdens laden
-
-      loadDataFromUrl("https://woutm.eu.pythonanywhere.com/test").then(data => {
-        console.log(data); // log de data van de test branch van de flask api
-
-        dataElement.innerHTML = data.text; // zet de data in de html
-      });
-    }
-
-    function getUserData() {
-      let steamID = document.getElementById("steamIDInput").value; // haal de steamID op uit de input
-      let userDataElement = document.getElementById("userData"); // haal het element op waar de data in moet
-
-      userDataElement.innerHTML = "Laden..."; // zet de text op een placeholder tijdens laden
-
-      loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api?steamID=" + steamID).then(data => {
-        userDataElement.innerHTML = JSON.stringify(data); // zet de data in de html
-      });
-    }
-  </script>
+  <script src="./js/main.js"></script>
 </body>
 
 </html>
