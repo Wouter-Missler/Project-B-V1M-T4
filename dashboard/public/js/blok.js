@@ -36,8 +36,6 @@ class Blok {
         // haal de display variables op
         loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
             // ga door alle display variables heen, en sla de overeenkomende data uit de api op in de displayVariables array
-            console.log(data)
-
             for (const displayVariable in this.type.displayVariables) {
                 this.displayVariables.push({
                     type: this.type.displayVariables[displayVariable],
@@ -54,8 +52,6 @@ class Blok {
             title.innerHTML = this.type.name;
             this.element.appendChild(title);
             document.querySelector('.blokken').appendChild(this.element);
-
-            console.log(this)
 
             this.createElement(this.type.displayType, null, this.element);
         });

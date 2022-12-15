@@ -58,6 +58,48 @@ def loadJson():  # route wordt gebruikt om de blocktypes op te halen
     return data
 
 
+@app.route("/api/blocksaved")
+def blocksaved():
+    # haal de steamID op uit de url
+    steamID = request.args.get("steamID")
+
+    # haal de data op uit blockSaved.json
+    f = open(app.root_path+"/blockSaved.json")
+    data = json.load(f)
+
+    # haal het juiste item op uit de list door de steamID
+    for item in data:
+        if item["steamID"] == steamID:
+            return item
+
+    # return een lege json als er geen item is gevonden, eerste item in json is leeg
+    return data[0]
+
+
+@app.route("/api/blocksave", methods=["POST"])
+def blocksave():
+    # haal de data op uit de request
+    data = request.get_json()
+
+    # haal de data op uit blockSaved.json
+    f = open(app.root_path+"/blockSaved.json")
+    savedData = json.load(f)
+
+    # als de steamID niet in de lijst staat, voeg hem dan toe
+    if not any(item["steamID"] == data["steamID"] for item in savedData):
+        savedData.append(data)
+
+    # haal het juiste item op uit de list door de steamID
+    for item in savedData:
+        if item["steamID"] == data["steamID"]:
+            item["blocks"] = data["blocks"]
+            break
+
+    # schrijf de data terug naar blockSaved.json
+    f = open(app.root_path+"/blockSaved.json", "w")
+    json.dump(savedData, f)
+
+
 @app.route("/blocktypes")
 def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     # haal de data op uit blockTypes.json

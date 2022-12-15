@@ -125,13 +125,12 @@ header .right-group {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 
-header .right-group .block-add {
-  margin: 0 25px 0 auto;
-}
-
-header .right-group .block-add button {
+header .right-group > button, header .right-group .block-add > button {
   height: 45px;
   padding: 0 15px;
   background-color: var(--light-blue);
@@ -150,15 +149,151 @@ header .right-group .block-add button {
   font-weight: 500;
 }
 
-header .right-group .block-add button i {
+header .right-group > button:first-child, header .right-group .block-add > button:first-child {
+  margin-left: auto;
+}
+
+header .right-group > button i, header .right-group .block-add > button i {
   margin-left: 5px;
   color: var(--darkest-blue);
   font-size: 18px;
   line-height: 0;
 }
 
+header .right-group .block-add {
+  margin: 0 25px;
+  position: relative;
+}
+
 header .right-group .block-add .block-add-popup {
-  display: none;
+  position: absolute;
+  top: calc(100% + 20px);
+  right: 0;
+  background-color: var(--blue);
+  width: 300px;
+  padding: 15px 15px 30px 15px;
+  text-align: center;
+  opacity: 1;
+  -webkit-transform-origin: top;
+          transform-origin: top;
+  -webkit-transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
+  transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
+  transition: transform .2s ease-out, opacity .2s ease-out;
+  transition: transform .2s ease-out, opacity .2s ease-out, -webkit-transform .2s ease-out;
+  z-index: 2;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+header .right-group .block-add .block-add-popup.hidden {
+  opacity: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+}
+
+header .right-group .block-add .block-add-popup::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 32px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--blue);
+}
+
+header .right-group .block-add .block-add-popup h3 {
+  font-weight: 500;
+  color: var(--light-gray);
+  margin: 15px 0 30px 0;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input {
+  width: 100%;
+  height: 45px;
+  background-color: var(--blue);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 10px;
+  margin-bottom: 15px;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input input {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  color: var(--light-gray);
+  font-size: 18px;
+  font-family: var(--main-font);
+}
+
+header .right-group .block-add .block-add-popup .block-add-input input::-webkit-input-placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input input:-ms-input-placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input input::-ms-input-placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input input::placeholder {
+  color: var(--light-gray);
+  opacity: .5;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input input:focus {
+  outline: none;
+}
+
+header .right-group .block-add .block-add-popup .block-add-input button {
+  width: 45px;
+  height: 45px;
+  background-color: transparent;
+  border: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+}
+
+header .right-group .block-add .block-add-popup button {
+  width: 200px;
+  height: 30px;
+  background-color: var(--light-blue);
+  border: none;
+  cursor: pointer;
+  font-family: var(--main-font);
+  font-weight: 600;
+}
+
+header .right-group .block-add .block-add-popup button i {
+  margin-left: 5px;
+  color: var(--darkest-blue);
+  font-size: 18px;
+  line-height: 0;
 }
 
 header .right-group .user {
@@ -207,6 +342,9 @@ header .right-group .user .user-popup {
   transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
   transition: transform .2s ease-out, opacity .2s ease-out;
   transition: transform .2s ease-out, opacity .2s ease-out, -webkit-transform .2s ease-out;
+  z-index: 2;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 header .right-group .user .user-popup.hidden {
