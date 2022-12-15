@@ -52,7 +52,8 @@ def friendlist():
 @app.route("/blocktypes")
 def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     # haal de data op uit blockTypes.json
-    infile = open("blockTypes.json", "r")
+    path = app.root_path + "/blockTypes.json"
+    infile = open(path, "r")
     data = infile.read()
     infile.close()
 

@@ -3,7 +3,7 @@
         "name": "Gebruikersinfo",
         "apiType": "GetPlayerSummaries",
         "dataIsArray": false,
-        "displayType": "list",
+        "displayType": "table",
         "displayVariables": {
             "steamid": "p",
             "personaname": "p",

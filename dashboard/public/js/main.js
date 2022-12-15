@@ -1,4 +1,5 @@
 let currentUser; // houd de huidige gebruiker bij
+let blockTypes; // houd de block types bij
 
 window.onload = function () {
     // check of er een steamID in de localstorage staat
@@ -15,6 +16,11 @@ window.onload = function () {
         // zet de steamID in de user popup id
         document.getElementById("userPopupID").innerHTML = "Niet ingelogd";
     }
+
+    // haal de block types op
+    loadDataFromUrl("https://woutm.eu.pythonanywhere.com/blocktypes").then(data => {
+        blockTypes = data; // sla de json data op in de blockTypes variabele
+    });
 }
 
 // voeg een event listener toe aan de user avatar om de user popup te tonen of te verbergen
