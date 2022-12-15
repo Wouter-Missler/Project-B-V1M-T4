@@ -107,6 +107,8 @@ def blocksave():
     f = open(app.root_path+"/blockSaved.json", "w")
     json.dump(savedData, f)
 
+    return "Success"
+
 
 @app.route("/blocktypes")
 def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
