@@ -50,6 +50,14 @@ def friendlist():
     return data
 
 
+@app.route("/api/loadjson")
+def loadJson():  # route wordt gebruikt om de blocktypes op te halen
+    # haal de data op uit blockTypes.json
+    f = open(app.root_path+"/steam.json")
+    data = json.load(f)
+    return data
+
+
 @app.route("/blocktypes")
 def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     # haal de data op uit blockTypes.json
@@ -59,11 +67,3 @@ def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     infile.close()
 
     return data
-
-
-@app.route("/loadjson")
-def loadJson():  # route wordt gebruikt om de blocktypes op te halen
-    # haal de data op uit blockTypes.json
-    f = open(app.root_path+"/steam.json")
-    data = json.load(f)
-    return data[0]
