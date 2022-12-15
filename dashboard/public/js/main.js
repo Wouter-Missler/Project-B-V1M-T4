@@ -2,7 +2,7 @@ let currentUser; // houd de huidige gebruiker bij
 let blockTypes; // houd de block types bij
 let huidigeBlocks = []; // houd de huidige blocks bij
 let apiURL = "https://woutm.eu.pythonanywhere.com"; // houd de api url bij
-apiURL = "http://localhost:5000"; // voor local testing
+// apiURL = "http://localhost:5000"; // voor local testing
 
 window.onload = function () {
     // haal de block types op
