@@ -35,7 +35,7 @@ function updateUser() {
     // haal de steamID op uit de localstorage
     let steamID = localStorage.getItem("steamID");
 
-    loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api?steamID=" + steamID).then(data => {
+    loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api/getplayersummaries?steamID=" + steamID).then(data => {
         currentUser = data; // sla de json data op in de currentUser variabele
 
         document.querySelector(".user-avatar img").src = currentUser.avatar; // zet de avatar

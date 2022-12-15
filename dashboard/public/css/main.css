@@ -198,13 +198,26 @@ header .right-group .user .user-popup {
   right: 0;
   background-color: var(--blue);
   width: 300px;
-  height: 200px;
-  padding: 15px;
+  padding: 15px 15px 30px 15px;
   text-align: center;
+  opacity: 1;
+  -webkit-transform-origin: top;
+          transform-origin: top;
+  -webkit-transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
+  transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
+  transition: transform .2s ease-out, opacity .2s ease-out;
+  transition: transform .2s ease-out, opacity .2s ease-out, -webkit-transform .2s ease-out;
 }
 
 header .right-group .user .user-popup.hidden {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
 }
 
 header .right-group .user .user-popup::after {
