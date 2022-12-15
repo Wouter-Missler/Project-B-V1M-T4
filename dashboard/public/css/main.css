@@ -262,23 +262,6 @@ header .right-group .block-add .block-add-popup .block-add-input input:focus {
   outline: none;
 }
 
-header .right-group .block-add .block-add-popup .block-add-input button {
-  width: 45px;
-  height: 45px;
-  background-color: transparent;
-  border: none;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  cursor: pointer;
-}
-
 header .right-group .block-add .block-add-popup button {
   width: 200px;
   height: 30px;
@@ -287,13 +270,7 @@ header .right-group .block-add .block-add-popup button {
   cursor: pointer;
   font-family: var(--main-font);
   font-weight: 600;
-}
-
-header .right-group .block-add .block-add-popup button i {
-  margin-left: 5px;
-  color: var(--darkest-blue);
-  font-size: 18px;
-  line-height: 0;
+  margin-bottom: 15px;
 }
 
 header .right-group .user {
@@ -443,12 +420,55 @@ section.blokken .blok {
   position: relative;
 }
 
+section.blokken .blok.loading {
+  background-color: var(--dark-blue);
+  opacity: 0.5;
+  height: 375px;
+}
+
+section.blokken .blok.loading::after {
+  content: 'Aan het laden...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  color: var(--light-gray);
+  font-size: 18px;
+  font-weight: 600;
+  font-family: var(--main-font);
+}
+
 section.blokken .blok h2 {
   font-weight: 600;
   color: var(--light-gray);
   margin-bottom: 15px;
   background-color: var(--dark-blue);
   padding: 15px 45px;
+}
+
+section.blokken .blok h2 span {
+  font-weight: 500;
+  color: var(--light-blue);
+  margin-left: 5px;
+}
+
+section.blokken .blok h2 .removeButton {
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+section.blokken .blok h2 .removeButton img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 section.blokken .blok table {
@@ -473,5 +493,40 @@ section.blokken .blok table thead {
   margin-bottom: 15px;
   font-family: var(--main-font);
   color: var(--light-blue);
+}
+
+section.blokken .blok .tableButtons {
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 0 45px 30px 45px;
+  margin-top: -20px;
+}
+
+section.blokken .blok .tableButtons span {
+  color: var(--light-gray);
+  font-size: 18px;
+  font-family: var(--mono-font);
+}
+
+section.blokken .blok .tableButtons button {
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+section.blokken .blok .tableButtons button img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 /*# sourceMappingURL=main.css.map */

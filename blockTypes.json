@@ -8,20 +8,41 @@
         },
         "displayType": "table",
         "displayVariables": {
-            "steamid": "p",
             "personaname": "p",
+            "steamid": "p",
             "profileurl": "a",
             "avatar": "img",
             "personastate": "p!status",
             "lastlogoff": "p!unix"
         },
         "displayVariableNames": {
-            "steamid": "SteamID",
             "personaname": "Gebruikersnaam",
+            "steamid": "SteamID",
             "profileurl": "Profiel URL",
             "avatar": "Avatar",
             "personastate": "Status",
             "lastlogoff": "Laatst Online"
+        }
+    },
+    {
+        "name": "Vrienden",
+        "apiType": "GetFriendList",
+        "dataIsArray": true,
+        "arrayLocation": [
+            "friendslist",
+            "friends"
+        ],
+        "inputVariables": {
+            "steamID": "steam id"
+        },
+        "displayType": "table",
+        "displayVariables": {
+            "steamid": "p!steamidToName",
+            "friend_since": "p!unix"
+        },
+        "displayVariableNames": {
+            "steamid": "Gebruikersnaam",
+            "friend_since": "Vrienden sinds"
         }
     }
 ]

@@ -3,6 +3,15 @@ class Blok {
         this.type = type;
         this.inputVariables = [];
         this.displayVariables = [];
+        this.tableLimit = 6;
+        this.tablePage = 0;
+
+        // voeg het blok toe aan de pagina
+        this.element = document.createElement('div');
+        this.element.classList.add('blok');
+        this.element.classList.add('loading');
+        this.element.classList.add(this.type.name);
+        document.querySelector('.blokken').appendChild(this.element);
 
         // vraag de gebruiker om de input variables
         if (askForInputVariables) {
@@ -12,7 +21,11 @@ class Blok {
                 // laat de gebruiker een waarde invoeren voor de input variable
                 if (val == null || val == "") {
                     alert("Geen geldige " + this.type.inputVariables[inputVariable] + " ingevoerd! \n\n Probeer het opnieuw.");
-                    val = prompt("voer hier uw " + this.type.inputVariables[inputVariable] + " in");
+                    // haal het blok uit de huidigeBlocks array
+                    huidigeBlocks.splice(huidigeBlocks.indexOf(this), 1);
+                    // verwijder het blok uit de pagina
+                    this.element.remove();
+                    return;
                 }
 
                 // sla de waarde op in de inputVariables array
@@ -36,24 +49,54 @@ class Blok {
         // haal de display variables op
         loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
             // ga door alle display variables heen, en sla de overeenkomende data uit de api op in de displayVariables array
-            for (const displayVariable in this.type.displayVariables) {
-                this.displayVariables.push({
-                    type: this.type.displayVariables[displayVariable],
-                    name: this.type.displayVariableNames[displayVariable],
-                    value: data[displayVariable]
-                });
+            if (!this.type.dataIsArray) {
+                for (const displayVariable in this.type.displayVariables) {
+                    this.displayVariables.push({
+                        type: this.type.displayVariables[displayVariable],
+                        name: this.type.displayVariableNames[displayVariable],
+                        value: data[displayVariable]
+                    });
+                }
             }
 
-            // voeg het blok toe aan dashboard
-            this.element = document.createElement('div');
-            this.element.classList.add('blok');
-            this.element.classList.add(this.type.name);
-            let title = document.createElement('h2');
-            title.innerHTML = this.type.name;
-            this.element.appendChild(title);
-            document.querySelector('.blokken').appendChild(this.element);
+            if (this.type.dataIsArray) {
+                let dataArray = data;
+                for (const location of this.type.arrayLocation) {
+                    dataArray = dataArray[location];
+                }
 
-            this.createElement(this.type.displayType, null, this.element);
+                // ga door dataArray heen
+                for (const d of dataArray) {
+                    for (const displayVariable in this.type.displayVariables) {
+                        this.displayVariables.push({
+                            type: this.type.displayVariables[displayVariable],
+                            name: this.type.displayVariableNames[displayVariable],
+                            value: d[displayVariable]
+                        });
+                    }
+                }
+            }
+
+            // voeg elementen toe aan het blok
+            this.title = document.createElement('h2');
+            this.title.innerHTML = this.type.name + " van <span class='titleName'>laden...</span>";
+            console.log(this.inputVariables[0].value)
+
+            // voeg een knop toe om het blok te verwijderen
+            this.removeButton = document.createElement('button');
+            this.removeButton.innerHTML = "<img src='./assets/x-icon.svg' alt='remove'>";
+            this.removeButton.classList.add('removeButton');
+            this.removeButton.addEventListener('click', () => {
+                // haal het blok uit de huidigeBlocks array
+                huidigeBlocks.splice(huidigeBlocks.indexOf(this), 1);
+                // verwijder het blok uit de DOM
+                this.element.remove();
+                // sla blokken op
+                saveBlocks();
+            });
+            this.title.appendChild(this.removeButton);
+
+            this.update();
         });
     }
 
@@ -92,8 +135,13 @@ class Blok {
             this.table.appendChild(this.tableBody);
 
             // voeg de rijen toe gebaseerd op de displayVariables lijst
-            for (const displayVariable in this.displayVariables) {
-                let current = this.displayVariables[displayVariable];
+            for (let i = 0; i < Math.min(this.displayVariables.length, this.tableLimit); i++) {
+                // haal current op, met de goeie pagina 
+                let currentIndex = i + this.tablePage * this.tableLimit;
+                if (currentIndex >= this.displayVariables.length) {
+                    break; // als de currentIndex groter is dan de lengte van de lijst, stop dan
+                }
+                let current = this.displayVariables[currentIndex];
 
                 // voeg de rij toe
                 let row = document.createElement('tr');
@@ -134,6 +182,34 @@ class Blok {
             toAppend = a;
         }
 
+        if (type == "tableNav") {
+            // voeg de knoppen toe
+            let container = document.createElement('div');
+            container.classList.add('tableButtons');
+            toAppend = container;
+
+            // voeg de knoppen toe
+            let prevButton = document.createElement('button');
+            prevButton.innerHTML = "<img src='./assets/arrow-left.svg' alt='vorige'>";
+            prevButton.classList.add('prevButton');
+            prevButton.addEventListener('click', () => {
+                this.changePage(this.tablePage - 1);
+            });
+            container.appendChild(prevButton);
+
+            let pageText = document.createElement('span');
+            pageText.innerHTML = "Pagina " + (this.tablePage + 1) + " van " + Math.ceil(this.displayVariables.length / this.tableLimit);
+            container.appendChild(pageText);
+
+            let nextButton = document.createElement('button');
+            nextButton.innerHTML = "<img src='./assets/arrow-right.svg' alt='volgende'>";
+            nextButton.classList.add('nextButton');
+            nextButton.addEventListener('click', () => {
+                this.changePage(this.tablePage + 1);
+            });
+            container.appendChild(nextButton);
+        }
+
         // als we nog iets speciaals moeten doen, doen we dat hier
         if (special == "unix") {
             // zet de unix timestamp om naar een datum
@@ -146,10 +222,82 @@ class Blok {
             toAppend.innerHTML = values[toAppend.innerHTML];
         }
 
+        if (special == "steamidToName") {
+            // zet de steam id om naar een naam
+            this.steamidToName(toAppend.innerHTML, toAppend);
+        }
+
         addTo.appendChild(toAppend);
     }
 
+    async steamidToName(steamid, element = null) {
+        // als de naam al bekend is, geef deze terug
+        if (steamidToNameCache[steamid]) {
+            if (element) {
+                element.innerHTML = steamidToNameCache[steamid];
+            }
+            return steamidToNameCache[steamid];
+        }
+
+        // als de naam nog niet bekend is, vraag deze op
+        let name = await loadDataFromUrl(apiURL + "/api/getplayersummaries?steamID=" + steamid + "&variable=personaname", false);
+
+        // sla de naam op in de cache
+        steamidToNameCache[steamid] = name;
+
+        // als er een element is meegegeven, zet de naam erin
+        if (element) {
+            element.innerHTML = name;
+        }
+
+        // geef de naam terug
+        return name;
+    }
+
     update() {
-        // update the block
+        // maak het blok leeg
+        this.element.innerHTML = "";
+
+        // voeg de loading class toe aan het blok
+        this.element.classList.add('loading');
+
+        this.steamidToName(this.inputVariables[0].value, this.title.querySelector('.titleName')).then(() => {
+            if (this.type.dataIsArray) {
+                let amount = this.displayVariables.length / Object.keys(this.type.displayVariables).length;
+                this.title.querySelector('.titleName').innerHTML += " (" + amount + ")";
+            }
+        });
+        this.element.appendChild(this.title);
+
+        this.createElement(this.type.displayType, null, this.element);
+
+        // als er een tabel is, en er meer dan 1 pagina is, voeg dan de navigatie toe
+        if (this.type.displayType == "table" && Math.ceil(this.displayVariables.length / this.tableLimit) > 1) {
+            this.createElement("tableNav", null, this.element);
+        }
+
+        // haal de loading class van het blok
+        this.element.classList.remove('loading');
+    }
+
+    changePage(page) {
+        // als de pagina niet veranderd, doe dan niks
+        if (this.tablePage == page) {
+            return;
+        }
+
+        // als de pagina wel veranderd, verander de pagina
+        this.tablePage = page;
+
+        // check of de pagina niet te hoog / laag is
+        if (this.tablePage < 0) {
+            this.tablePage = 0;
+        }
+        if (this.tablePage > Math.ceil(this.displayVariables.length / this.tableLimit) - 1) {
+            this.tablePage = Math.ceil(this.displayVariables.length / this.tableLimit) - 1;
+        }
+
+        // update het blok
+        this.update();
     }
 }

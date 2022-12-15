@@ -31,7 +31,15 @@ def playersum():
     data = infile.json()
 
     firstPlayer = data["response"]["players"][0]
-    return firstPlayer
+
+    returnData = firstPlayer
+
+    # check of het argument variable is doorgegeven, zo ja, haal dan alleen die data op
+    variable = request.args.get("variable")
+    if variable is not None:
+        returnData = firstPlayer[variable]
+
+    return returnData
 
 
 @app.route("/api/getfriendlist")  # maak een route naar de friendlist api

@@ -2,7 +2,9 @@ let currentUser; // houd de huidige gebruiker bij
 let blockTypes; // houd de block types bij
 let huidigeBlocks = []; // houd de huidige blocks bij
 let apiURL = "https://woutm.eu.pythonanywhere.com"; // houd de api url bij
-// apiURL = "http://localhost:5000"; // voor local testing
+apiURL = "http://localhost:5000"; // voor local testing
+
+let steamidToNameCache = []; // houd een cache bij van steamid naar naam
 
 window.onload = function () {
     // haal de block types op
@@ -15,7 +17,7 @@ window.onload = function () {
             button.innerHTML = blockTypes[blockType].name;
             button.addEventListener("click", function () {
                 // voeg een blok toe met de gekozen block type
-                huidigeBlocks.push(new Blok(blockTypes[blockType], true));
+                createBlock(blockTypes[blockType]);
             });
             document.querySelector(".block-add .block-add-popup").appendChild(button);
         }
@@ -62,9 +64,10 @@ document.querySelector(".block-add button").addEventListener("click", function (
 });
 
 // algemeen functie om json data op te halen van een url
-async function loadDataFromUrl(url) {
+async function loadDataFromUrl(url, useJson = true) {
     const response = await fetch(url); // wacht tot de data binnen is
-    var data = await response.json(); // zet de data om naar json
+    if (useJson) var data = await response.json(); // zet de data om naar json
+    else var data = await response.text(); // zet de data om naar text
 
     return data; // return de data
 }
@@ -162,4 +165,12 @@ function saveBlocks() {
 
     // sla de blokken op zonder de pagina te herladen
     saveDataToUrl(apiURL + "/api/blocksave", data);
+}
+
+function createBlock(type) {
+    // maak een nieuwe block aan
+    let blok = new Blok(type);
+
+    // voeg de block toe aan de huidigeBlocks array
+    huidigeBlocks.push(blok);
 }
