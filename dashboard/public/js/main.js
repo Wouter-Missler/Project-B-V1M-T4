@@ -106,13 +106,7 @@ function updateUser() {
 function changeUser() {
     let steamID = prompt("SteamID:"); // vraag de gebruiker om een steamID
 
-    // check de steamID voor leeg, null, iets anders dan cijfers of niet 17 karakters lang
-    if (!steamID.match(/^[0-9]+$/) || steamID.length !== 17) { // regex check voor alleen cijfers
-        alert("Geen geldige SteamID ingevoerd! \n\n Probeer het opnieuw.");
-        return;
-    }
-
-    if (steamID !== "" && steamID !== null) { // check of de steamID niet leeg of null is
+    if (steamID !== "" && steamID !== null && steamID.match(/^[0-9]+$/) || steamID.length !== 17) { // check of de steamID niet leeg of null is en of het een geldige steamID is
         // sla de steamID op in de localstorage
         localStorage.setItem("steamID", steamID);
     } else {
