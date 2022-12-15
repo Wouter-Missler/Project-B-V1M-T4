@@ -274,4 +274,66 @@ header .right-group .user .user-popup button i {
   font-size: 18px;
   line-height: 0;
 }
+
+section.blokken {
+  width: 100vw;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(500px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  grid-gap: 15px;
+  padding: 4rem 10vw;
+}
+
+section.blokken .blok {
+  width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  background-color: var(--blue);
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: relative;
+}
+
+section.blokken .blok h2 {
+  font-weight: 600;
+  color: var(--light-gray);
+  margin-bottom: 15px;
+  background-color: var(--dark-blue);
+  padding: 15px 45px;
+}
+
+section.blokken .blok table {
+  padding: 45px;
+  padding-top: 15px;
+  max-width: 100%;
+  color: var(--light-gray);
+  font-size: 18px;
+  font-family: var(--mono-font);
+}
+
+section.blokken .blok table tbody:before {
+  content: "-";
+  display: block;
+  line-height: .5em;
+  color: transparent;
+}
+
+section.blokken .blok table thead {
+  font-weight: 500;
+  text-align: left;
+  margin-bottom: 15px;
+  font-family: var(--main-font);
+  color: var(--light-blue);
+}
 /*# sourceMappingURL=main.css.map */

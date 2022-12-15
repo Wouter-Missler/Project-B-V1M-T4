@@ -1,5 +1,6 @@
 let currentUser; // houd de huidige gebruiker bij
 let blockTypes; // houd de block types bij
+let huidigeBlocks = []; // houd de huidige blocks bij
 
 window.onload = function () {
     // check of er een steamID in de localstorage staat
@@ -20,6 +21,12 @@ window.onload = function () {
     // haal de block types op
     loadDataFromUrl("https://woutm.eu.pythonanywhere.com/blocktypes").then(data => {
         blockTypes = data; // sla de json data op in de blockTypes variabele
+
+        console.log("blocktypes: ", blockTypes)
+
+        // voor nu, voeg een gebruikersinfo blok toe, met psiphi als steamID
+        huidigeBlocks.push(new Blok(blockTypes[0], false, [{ name: "steamID", value: "76561198231894684" }]));
+        huidigeBlocks.push(new Blok(blockTypes[0], false, [{ name: "steamID", value: "76561198393685815" }]));
     });
 }
 
