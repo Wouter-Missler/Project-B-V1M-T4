@@ -3,6 +3,9 @@
         "name": "Gebruikersinfo",
         "apiType": "GetPlayerSummaries",
         "dataIsArray": false,
+        "inputVariables": {
+            "steamID": "steam id"
+        },
         "displayType": "table",
         "displayVariables": {
             "steamid": "p",
