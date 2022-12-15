@@ -97,6 +97,9 @@ function updateUser() {
             document.querySelector(".user-popup .user-id .id").innerHTML = currentUser.steamid; // zet de steamID	
         });
     } else {
+        getSavedBlocks();
+
+        currentUser = null; // zet de currentUser variabele op null
         document.querySelector(".user-avatar img").src = "./assets/avatar-placeholder.jpg"; // zet de avatar terug naar de placeholder
         document.querySelector(".user-popup .username").innerHTML = "Huidige gebruiker: Niet ingelogd"; // zet de gebruikersnaam
         document.querySelector(".user-popup .user-id .id").innerHTML = "Niet ingelogd"; // zet de steamID
