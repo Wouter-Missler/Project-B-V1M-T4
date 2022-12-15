@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Gebruikersinfo",
+        "apiType": "GetPlayerSummaries",
+        "dataIsArray": false,
+        "displayType": "list",
+        "displayVariables": {
+            "steamid": "p",
+            "personaname": "p",
+            "profileurl": "a",
+            "avatar": "img",
+            "personastate": "p!status",
+            "lastlogoff": "p!unix"
+        },
+        "displayVariableNames": {
+            "steamid": "SteamID",
+            "personaname": "Gebruikersnaam",
+            "profileurl": "Profiel URL",
+            "avatar": "Avatar",
+            "personastate": "Status",
+            "lastlogoff": "Laatst Online"
+        }
+    }
+]
