@@ -1,6 +1,7 @@
 from flask import Flask, request  # importeer de Flask class
 from flask_cors import CORS
 import requests
+import json
 
 steamAPIKey = "A862570CC2139926066420C4E9A5A927"
 
@@ -58,3 +59,11 @@ def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     infile.close()
 
     return data
+
+
+@app.route("/loadjson")
+def loadJson():  # route wordt gebruikt om de blocktypes op te halen
+    # haal de data op uit blockTypes.json
+    f = open(app.root_path+"/steam.json")
+    data = json.load(f)
+    return data[0]
