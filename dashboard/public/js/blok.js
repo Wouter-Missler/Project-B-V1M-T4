@@ -268,12 +268,16 @@ class Blok {
         // voeg de loading class toe aan het blok
         this.element.classList.add('loading');
 
-        this.steamidToName(this.inputVariables[0].value, this.title.querySelector('.titleName')).then(() => {
-            if (this.type.dataIsArray) {
-                let amount = this.displayVariables.length / Object.keys(this.type.displayVariables).length;
-                this.title.querySelector('.titleName').innerHTML += " (" + amount + ")";
-            }
-        });
+        if (this.inputVariables.length > 0) {
+            this.steamidToName(this.inputVariables[0].value, this.title.querySelector('.titleName')).then(() => {
+                if (this.type.dataIsArray) {
+                    let amount = this.displayVariables.length / Object.keys(this.type.displayVariables).length;
+                    this.title.querySelector('.titleName').innerHTML += " (" + amount + ")";
+                }
+            });
+        } else {
+            this.title.innerHTML = this.type.name;
+        }
         this.element.appendChild(this.title);
 
         this.createElement(this.type.displayType, null, this.element);

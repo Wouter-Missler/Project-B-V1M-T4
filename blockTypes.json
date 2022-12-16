@@ -72,5 +72,26 @@
             "playtime_2weeks": "Speeltijd 2 weken",
             "playtime_forever": "Speeltijd totaal"
         }
+    },
+    {
+        "name": "Json-games",
+        "apiType": "loadjson",
+        "dataIsArray": true,
+        "tableLimit": 4,
+        "arrayLocation": [],
+        "inputVariables": {},
+        "displayType": "table",
+        "displayVariables": {
+            "name": "p",
+            "release_date": "p",
+            "developer": "p",
+            "price": "p"
+        },
+        "displayVariableNames": {
+            "name": "Game naam",
+            "release_date": "Release datum",
+            "developer": "Developer",
+            "price": "Prijs"
+        }
     }
 ]
