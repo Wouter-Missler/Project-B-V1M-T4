@@ -81,12 +81,12 @@
         "apiType": "loadjson",
         "dataIsArray": true,
         "showFromInTitle": false,
-        "dataLimit": 4,
+        "dataLimit": 8,
         "arrayLocation": [
             "data"
         ],
         "inputVariables": {
-            "limit": "!limit:2",
+            "limit": "!limit:4",
             "offset": "!offset"
         },
         "displayType": "table",

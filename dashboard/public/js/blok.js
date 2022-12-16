@@ -170,7 +170,9 @@ class Blok {
             container.appendChild(prevButton);
 
             let pageText = document.createElement('span');
-            pageText.innerHTML = "Pagina " + (this.dataPage + 1) + " van " + Math.ceil(this.displayVariables.length / this.dataArrayLength);
+            let pageAmount = Math.ceil(this.displayVariables.length / this.dataArrayLength);
+            if (this.dataLimit !== this.dataArrayLength) pageAmount = Math.ceil(this.dataArrayLength * (Object.keys(this.type.displayVariables).length / this.dataLimit));
+            pageText.innerHTML = "Pagina " + (this.dataPage + 1) + " van " + pageAmount;
             container.appendChild(pageText);
 
             let nextButton = document.createElement('button');
@@ -376,8 +378,8 @@ class Blok {
             this.update();
         } else {
             // gebruik de originele lengte van de data array om te checken of de pagina niet te hoog is
-            if (this.dataPage > Math.ceil(this.dataArrayLength / this.dataLimit) - 1) {
-                this.dataPage = Math.ceil(this.dataArrayLength / this.dataLimit) - 1;
+            if (this.dataPage > Math.ceil(this.dataArrayLength * (Object.keys(this.type.displayVariables).length / this.dataLimit)) - 1) {
+                this.dataPage = Math.ceil(this.dataArrayLength * (Object.keys(this.type.displayVariables).length / this.dataLimit)) - 1;
             }
             // update de display variables
             this.getDisplayVariables();
