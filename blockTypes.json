@@ -3,6 +3,7 @@
         "name": "Gebruikersinfo",
         "apiType": "GetPlayerSummaries",
         "dataIsArray": false,
+        "tableLimit": 6,
         "inputVariables": {
             "steamID": "steam id"
         },
@@ -28,6 +29,7 @@
         "name": "Vrienden",
         "apiType": "GetFriendList",
         "dataIsArray": true,
+        "tableLimit": 6,
         "arrayLocation": [
             "friendslist",
             "friends"
@@ -43,6 +45,32 @@
         "displayVariableNames": {
             "steamid": "Gebruikersnaam",
             "friend_since": "Vrienden sinds"
+        }
+    },
+    {
+        "name": "Recente-games",
+        "apiType": "GetRecentlyPlayedGames",
+        "dataIsArray": true,
+        "tableLimit": 4,
+        "arrayLocation": [
+            "response",
+            "games"
+        ],
+        "inputVariables": {
+            "steamID": "steam id"
+        },
+        "displayType": "table",
+        "displayVariables": {
+            "name": "p",
+            "appid": "p",
+            "playtime_2weeks": "p!min",
+            "playtime_forever": "p!min"
+        },
+        "displayVariableNames": {
+            "name": "Game naam",
+            "appid": "AppID",
+            "playtime_2weeks": "Speeltijd 2 weken",
+            "playtime_forever": "Speeltijd totaal"
         }
     }
 ]

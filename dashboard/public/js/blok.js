@@ -3,7 +3,7 @@ class Blok {
         this.type = type;
         this.inputVariables = [];
         this.displayVariables = [];
-        this.tableLimit = 6;
+        this.tableLimit = this.type.tableLimit;
         this.tablePage = 0;
 
         // voeg het blok toe aan de pagina
@@ -47,7 +47,7 @@ class Blok {
         }
 
         // haal de display variables op
-        loadDataFromUrl("https://woutm.eu.pythonanywhere.com/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
+        loadDataFromUrl(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
             // ga door alle display variables heen, en sla de overeenkomende data uit de api op in de displayVariables array
             if (!this.type.dataIsArray) {
                 for (const displayVariable in this.type.displayVariables) {
@@ -80,7 +80,6 @@ class Blok {
             // voeg elementen toe aan het blok
             this.title = document.createElement('h2');
             this.title.innerHTML = this.type.name + " van <span class='titleName'>laden...</span>";
-            console.log(this.inputVariables[0].value)
 
             // voeg een knop toe om het blok te verwijderen
             this.removeButton = document.createElement('button');
@@ -214,6 +213,13 @@ class Blok {
         if (special == "unix") {
             // zet de unix timestamp om naar een datum
             toAppend.innerHTML = new Date(toAppend.innerHTML * 1000).toLocaleDateString();
+        }
+
+        if (special == "min") {
+            // zet de minuten om naar een leesbare waarde
+            let hours = Math.floor(toAppend.innerHTML / 60);
+            let minutes = toAppend.innerHTML % 60;
+            toAppend.innerHTML = hours + " uur en " + minutes + " minuten";
         }
 
         if (special == "status") {

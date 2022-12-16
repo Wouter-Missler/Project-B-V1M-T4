@@ -58,6 +58,24 @@ def friendlist():
     return data
 
 
+@app.route("/api/getrecentlyplayedgames")
+def recentlyplayedgames():
+    # haal de steamID op uit de url
+    steamID = request.args.get("steamID")
+
+    url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key={}&steamid={}&format=json".format(
+        steamAPIKey, steamID)
+
+    # haal de data op
+    session = requests.Session()
+    infile = session.get(url)
+    data = infile.json()
+
+    return data
+
+# route wordt gebruikt om de doorgegeven json file op te halen
+
+
 @app.route("/api/loadjson")
 def loadJson():  # route wordt gebruikt om de blocktypes op te halen
     # haal de data op uit blockTypes.json
@@ -66,6 +84,7 @@ def loadJson():  # route wordt gebruikt om de blocktypes op te halen
     return data
 
 
+# route wordt gebruikt om de blockSaved.json op te halen
 @app.route("/api/blocksaved")
 def blocksaved():
     # haal de steamID op uit de url
@@ -84,6 +103,7 @@ def blocksaved():
     return data[0]
 
 
+# route wordt gebruikt om de blockSaved.json te updaten
 @app.route("/api/blocksave", methods=["POST"])
 def blocksave():
     # haal de data op uit de request
