@@ -487,6 +487,10 @@ section.blokken .blok table tbody:before {
   color: transparent;
 }
 
+section.blokken .blok table tbody td {
+  width: 50%;
+}
+
 section.blokken .blok table thead {
   font-weight: 500;
   text-align: left;
@@ -503,10 +507,10 @@ section.blokken .blok .tableButtons {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  margin-bottom: 15px;
   width: 100%;
-  padding: 0 45px 30px 45px;
-  margin-top: -20px;
+  padding: 15px 45px 15px 45px;
+  background-color: var(--dark-blue);
+  border-radius: 0 0 5px 5px;
 }
 
 section.blokken .blok .tableButtons span {
