@@ -30,8 +30,10 @@ def playersum():
     infile = session.get(url)
     data = infile.json()
 
-    firstPlayer = data["response"]["players"][0]
+    if (data["response"]["players"] == []):
+        return "no-data"
 
+    firstPlayer = data["response"]["players"][0]
     returnData = firstPlayer
 
     # check of het argument variable is doorgegeven, zo ja, haal dan alleen die data op

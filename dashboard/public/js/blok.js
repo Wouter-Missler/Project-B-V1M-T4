@@ -21,10 +21,7 @@ class Blok {
                 // laat de gebruiker een waarde invoeren voor de input variable
                 if (val == null || val == "") {
                     alert("Geen geldige " + this.type.inputVariables[inputVariable] + " ingevoerd! \n\n Probeer het opnieuw.");
-                    // haal het blok uit de huidigeBlocks array
-                    huidigeBlocks.splice(huidigeBlocks.indexOf(this), 1);
-                    // verwijder het blok uit de pagina
-                    this.element.remove();
+                    this.remove();
                     return;
                 }
 
@@ -48,6 +45,13 @@ class Blok {
 
         // haal de display variables op
         loadDataFromUrl(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
+            if (data == "no-data") {
+                // als de data niet opgehaald kon worden, geef een error en stop de functie
+                alert("Er is iets fout gegaan bij het ophalen van de data, probeer het later opnieuw. \n het kan zijn dat het profiel privé is of dat de gebruiker niet bestaat.");
+                this.remove();
+                return;
+            }
+
             // ga door alle display variables heen, en sla de overeenkomende data uit de api op in de displayVariables array
             if (!this.type.dataIsArray) {
                 for (const displayVariable in this.type.displayVariables) {
@@ -86,10 +90,7 @@ class Blok {
             this.removeButton.innerHTML = "<img src='./assets/x-icon.svg' alt='remove'>";
             this.removeButton.classList.add('removeButton');
             this.removeButton.addEventListener('click', () => {
-                // haal het blok uit de huidigeBlocks array
-                huidigeBlocks.splice(huidigeBlocks.indexOf(this), 1);
-                // verwijder het blok uit de DOM
-                this.element.remove();
+                this.remove();
                 // sla blokken op
                 saveBlocks();
             });
@@ -305,5 +306,11 @@ class Blok {
 
         // update het blok
         this.update();
+    }
+    remove() {
+        // haal het blok uit de huidigeBlocks array
+        huidigeBlocks.splice(huidigeBlocks.indexOf(this), 1);
+        // verwijder het blok uit de pagina
+        this.element.remove();
     }
 }

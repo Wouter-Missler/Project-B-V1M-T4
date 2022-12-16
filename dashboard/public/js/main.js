@@ -23,11 +23,7 @@ window.onload = function () {
             document.querySelector(".block-add .block-add-popup").appendChild(button);
         }
 
-        console.log("blocktypes: ", blockTypes)
-
-        // voor nu, voeg een gebruikersinfo blok toe, met psiphi als steamID
-        // huidigeBlocks.push(new Blok(blockTypes[0], false, [{ name: "steamID", value: "76561198231894684" }]));
-        // huidigeBlocks.push(new Blok(blockTypes[0], false, [{ name: "steamID", value: "76561198393685815" }]));
+        // console.log("blocktypes: ", blockTypes)
     }).then(() => {
 
         // check of er een steamID in de localstorage staat
@@ -56,7 +52,7 @@ document.querySelector(".user-avatar").addEventListener("click", function () {
 // voeg een event listener toe aan de add block knop om een blok toe te voegen
 document.querySelector(".block-add button").addEventListener("click", function () {
     // check of de gebruiker is ingelogd
-    if (localStorage.getItem("steamID") === null) {
+    if (localStorage.getItem("steamID") === '') {
         alert("Je moet ingelogd zijn om blokken toe te voegen!");
         return;
     }
@@ -67,8 +63,11 @@ document.querySelector(".block-add button").addEventListener("click", function (
 // algemeen functie om json data op te halen van een url
 async function loadDataFromUrl(url, useJson = true) {
     const response = await fetch(url); // wacht tot de data binnen is
-    if (useJson) var data = await response.json(); // zet de data om naar json
-    else var data = await response.text(); // zet de data om naar text
+    var data = await response.text(); // zet de data om naar text
+
+    if (useJson && data !== "no-data") {
+        data = JSON.parse(data); // zet de data om naar json
+    }
 
     return data; // return de data
 }
@@ -86,8 +85,7 @@ async function saveDataToUrl(url, data) {
 
 // functie om de gebruikers data te updaten
 function updateUser() {
-    // haal de steamID op uit de localstorage
-    let steamID = localStorage.getItem("steamID");
+    let steamID = localStorage.getItem("steamID"); // haal de steamID op uit de localstorage
 
     if (steamID) {
         // haal de opgeslagen blokken op
@@ -96,11 +94,21 @@ function updateUser() {
         loadDataFromUrl(apiURL + "/api/getplayersummaries?steamID=" + steamID).then(data => {
             currentUser = data; // sla de json data op in de currentUser variabele
 
+            if (currentUser == "no-data") {
+                alert("Gebruiker is een prive profiel of bestaat niet, je wordt als gast ingelogd.");
+                currentUser = {
+                    avatar: "./assets/avatar-placeholder.jpg",
+                    personaname: "Gast",
+                    steamid: steamID
+                }
+            }
+
             document.querySelector(".user-avatar img").src = currentUser.avatar; // zet de avatar
             document.querySelector(".user-popup .username").innerHTML = "Huidige gebruiker: " + currentUser.personaname; // zet de gebruikersnaam
             document.querySelector(".user-popup .user-id .id").innerHTML = currentUser.steamid; // zet de steamID	
         });
     } else {
+        // haal de opgeslagen blokken op
         getSavedBlocks();
 
         currentUser = null; // zet de currentUser variabele op null
@@ -126,8 +134,10 @@ function changeUser() {
 }
 
 function getSavedBlocks(steamID) {
-    // maak het element .blokken leeg
-    document.querySelector(".blokken").innerHTML = "";
+    huidigeBlocks = []; // maak de huidigeBlocks array leeg
+    document.querySelector(".blokken").innerHTML = ""; // maak het element .blokken leeg
+
+    if (steamID === undefined) return; // check of de steamID is meegegeven, zo niet, stop de functie
 
     // haal de opgeslagen blokken op en voeg ze toe aan de huidigeBlocks array
     loadDataFromUrl(apiURL + "/api/blocksaved?steamID=" + steamID).then(data => {
@@ -145,7 +155,10 @@ function saveBlocks() {
     let steamID = localStorage.getItem("steamID"); // haal de steamID op uit de localstorage
 
     // check of de gebruiker is ingelogd
-    if (steamID == null) return;
+    if (steamID == null) {
+        alert("Je moet ingelogd zijn om blokken op te slaan!");
+        return;
+    }
 
     // maak een array aan met de opgeslagen blokken
     let savedBlocks = [];
@@ -169,9 +182,6 @@ function saveBlocks() {
 }
 
 function createBlock(type) {
-    // maak een nieuwe block aan
+    // maak een nieuwe block aan, deze wordt via de constructor toegevoegd aan de huidigeBlocks array
     let blok = new Blok(type);
-
-    // voeg de block toe aan de huidigeBlocks array
-    huidigeBlocks.push(blok);
 }
