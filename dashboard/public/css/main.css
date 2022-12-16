@@ -19,6 +19,7 @@ html:root {
 body {
   background-color: var(--darkest-blue);
   font-family: var(--main-font);
+  overflow-x: hidden;
 }
 
 header {
