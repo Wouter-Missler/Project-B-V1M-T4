@@ -146,7 +146,7 @@ function getSavedBlocks(steamID) {
         // loop door alle opgeslagen blokken
         savedBlocks.forEach(blok => {
             // voeg de block toe aan de huidigeBlocks array
-            huidigeBlocks.push(new Blok(blockTypes.find(b => b.name == blok.name), false, blok.inputVariables));
+            new Blok(blockTypes.find(b => b.name == blok.name), false, blok.inputVariables);
         });
     });
 }

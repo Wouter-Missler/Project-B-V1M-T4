@@ -3,7 +3,8 @@
         "name": "Gebruikersinfo",
         "apiType": "GetPlayerSummaries",
         "dataIsArray": false,
-        "tableLimit": 6,
+        "showFromInTitle": true,
+        "dataLimit": 6,
         "inputVariables": {
             "steamID": "steam id"
         },
@@ -29,7 +30,8 @@
         "name": "Vrienden",
         "apiType": "GetFriendList",
         "dataIsArray": true,
-        "tableLimit": 6,
+        "showFromInTitle": true,
+        "dataLimit": 6,
         "arrayLocation": [
             "friendslist",
             "friends"
@@ -51,7 +53,8 @@
         "name": "Recente-games",
         "apiType": "GetRecentlyPlayedGames",
         "dataIsArray": true,
-        "tableLimit": 4,
+        "showFromInTitle": true,
+        "dataLimit": 4,
         "arrayLocation": [
             "response",
             "games"
@@ -77,9 +80,15 @@
         "name": "Json-games",
         "apiType": "loadjson",
         "dataIsArray": true,
-        "tableLimit": 4,
-        "arrayLocation": [],
-        "inputVariables": {},
+        "showFromInTitle": false,
+        "dataLimit": 4,
+        "arrayLocation": [
+            "data"
+        ],
+        "inputVariables": {
+            "limit": "!limit:2",
+            "offset": "!offset"
+        },
         "displayType": "table",
         "displayVariables": {
             "name": "p",

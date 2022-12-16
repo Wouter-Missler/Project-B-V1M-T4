@@ -3,8 +3,9 @@ class Blok {
         this.type = type;
         this.inputVariables = [];
         this.displayVariables = [];
-        this.tableLimit = this.type.tableLimit;
-        this.tablePage = 0;
+        this.dataLimit = this.type.dataLimit;
+        this.dataPage = 0;
+        this.dataArrayLength = this.dataLimit;
 
         // voeg het blok toe aan de pagina
         this.element = document.createElement('div');
@@ -16,88 +17,58 @@ class Blok {
         // vraag de gebruiker om de input variables
         if (askForInputVariables) {
             for (const inputVariable in this.type.inputVariables) {
+                let inputVar = {
+                    name: null,
+                    value: null
+                }
 
-                let val = prompt("voer hier uw " + this.type.inputVariables[inputVariable] + " in");
-                // laat de gebruiker een waarde invoeren voor de input variable
-                if (val == null || val == "") {
-                    alert("Geen geldige " + this.type.inputVariables[inputVariable] + " ingevoerd! \n\n Probeer het opnieuw.");
-                    this.remove();
-                    return;
+                if (this.type.inputVariables[inputVariable].includes("!")) {
+                    // check of de input varaible een ! heeft, zo ja, doe iets speciaals gebaseerd op wat na de ! staat
+
+                    let specialInputVariable = this.type.inputVariables[inputVariable].split("!")[1];
+
+                    if (specialInputVariable.includes("limit")) {
+                        // split de string op de : en sla de tweede waarde op in de amount variabele
+                        let amount = specialInputVariable.split(":")[1];
+
+                        inputVar.name = inputVariable;
+                        inputVar.value = amount;
+                    }
+
+                    if (specialInputVariable == "offset") {
+                        inputVar.name = inputVariable;
+                        inputVar.value = this.dataPage * this.dataLimit;
+                    }
+                } else {
+                    // anders, vraag de gebruiker om de input variable
+
+                    let val = prompt("voer hier uw " + this.type.inputVariables[inputVariable] + " in");
+                    // laat de gebruiker een waarde invoeren voor de input variable
+                    if (val == null || val == "") {
+                        alert("Geen geldige " + this.type.inputVariables[inputVariable] + " ingevoerd! \n\n Probeer het opnieuw.");
+                        this.remove();
+                        return;
+                    }
+
+                    inputVar = {
+                        name: inputVariable,
+                        value: val
+                    }
+
                 }
 
                 // sla de waarde op in de inputVariables array
-                this.inputVariables.push({
-                    name: inputVariable,
-                    value: val
-                });
+                this.inputVariables.push(inputVar);
 
             }
         } else {
             this.inputVariables = inputVariables;
         }
 
-        let urlAddition = "";
-        // voeg alle input variables toe aan de url
-        for (const inputVariable in this.inputVariables) {
-            let firstItem = this.inputVariables.indexOf(this.inputVariables[inputVariable]) == 0;
-            urlAddition += (!firstItem ? "&" : "?") + this.inputVariables[inputVariable].name + "=" + this.inputVariables[inputVariable].value;
-        }
+        this.getDisplayVariables();
 
-        // haal de display variables op
-        loadDataFromUrl(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
-            if (data == "no-data") {
-                // als de data niet opgehaald kon worden, geef een error en stop de functie
-                alert("Er is iets fout gegaan bij het ophalen van de data, probeer het later opnieuw. \n het kan zijn dat het profiel privé is of dat de gebruiker niet bestaat.");
-                this.remove();
-                return;
-            }
-
-            // ga door alle display variables heen, en sla de overeenkomende data uit de api op in de displayVariables array
-            if (!this.type.dataIsArray) {
-                for (const displayVariable in this.type.displayVariables) {
-                    this.displayVariables.push({
-                        type: this.type.displayVariables[displayVariable],
-                        name: this.type.displayVariableNames[displayVariable],
-                        value: data[displayVariable]
-                    });
-                }
-            }
-
-            if (this.type.dataIsArray) {
-                let dataArray = data;
-                for (const location of this.type.arrayLocation) {
-                    dataArray = dataArray[location];
-                }
-
-                // ga door dataArray heen
-                for (const d of dataArray) {
-                    for (const displayVariable in this.type.displayVariables) {
-                        this.displayVariables.push({
-                            type: this.type.displayVariables[displayVariable],
-                            name: this.type.displayVariableNames[displayVariable],
-                            value: d[displayVariable]
-                        });
-                    }
-                }
-            }
-
-            // voeg elementen toe aan het blok
-            this.title = document.createElement('h2');
-            this.title.innerHTML = this.type.name + " van <span class='titleName'>laden...</span>";
-
-            // voeg een knop toe om het blok te verwijderen
-            this.removeButton = document.createElement('button');
-            this.removeButton.innerHTML = "<img src='./assets/x-icon.svg' alt='remove'>";
-            this.removeButton.classList.add('removeButton');
-            this.removeButton.addEventListener('click', () => {
-                this.remove();
-                // sla blokken op
-                saveBlocks();
-            });
-            this.title.appendChild(this.removeButton);
-
-            this.update();
-        });
+        // voeg dit blok toe aan de huidige blokken
+        huidigeBlocks.push(this);
     }
 
     createElement(t, data = null, addTo) {
@@ -135,9 +106,10 @@ class Blok {
             this.table.appendChild(this.tableBody);
 
             // voeg de rijen toe gebaseerd op de displayVariables lijst
-            for (let i = 0; i < Math.min(this.displayVariables.length, this.tableLimit); i++) {
+            for (let i = 0; i < Math.min(this.displayVariables.length, this.dataLimit); i++) {
                 // haal current op, met de goeie pagina 
-                let currentIndex = i + this.tablePage * this.tableLimit;
+                let currentIndex = i + this.dataPage * this.dataLimit;
+                if (this.dataArrayLength !== this.dataLimit) currentIndex = i;
                 if (currentIndex >= this.displayVariables.length) {
                     break; // als de currentIndex groter is dan de lengte van de lijst, stop dan
                 }
@@ -193,19 +165,19 @@ class Blok {
             prevButton.innerHTML = "<img src='./assets/arrow-left.svg' alt='vorige'>";
             prevButton.classList.add('prevButton');
             prevButton.addEventListener('click', () => {
-                this.changePage(this.tablePage - 1);
+                this.changePage(this.dataPage - 1);
             });
             container.appendChild(prevButton);
 
             let pageText = document.createElement('span');
-            pageText.innerHTML = "Pagina " + (this.tablePage + 1) + " van " + Math.ceil(this.displayVariables.length / this.tableLimit);
+            pageText.innerHTML = "Pagina " + (this.dataPage + 1) + " van " + Math.ceil(this.displayVariables.length / this.dataArrayLength);
             container.appendChild(pageText);
 
             let nextButton = document.createElement('button');
             nextButton.innerHTML = "<img src='./assets/arrow-right.svg' alt='volgende'>";
             nextButton.classList.add('nextButton');
             nextButton.addEventListener('click', () => {
-                this.changePage(this.tablePage + 1);
+                this.changePage(this.dataPage + 1);
             });
             container.appendChild(nextButton);
         }
@@ -261,6 +233,79 @@ class Blok {
         return name;
     }
 
+    getDisplayVariables(doUpdate = true) {
+        this.displayVariables = [];
+
+        // check of we inputvariables moeten updaten, voor nu alleen bij de naam offset
+        // ga door alle input variables heen
+        for (const inputVariable in this.inputVariables) {
+            // als de input variable een offset is
+            if (this.inputVariables[inputVariable].name == "offset") {
+                // zet de offset op de pagina die we nu aan het bekijken zijn
+                this.inputVariables[inputVariable].value = this.dataPage;
+            }
+        }
+
+        let urlAddition = "";
+        // voeg alle input variables toe aan de url
+        for (const inputVariable in this.inputVariables) {
+            let firstItem = this.inputVariables.indexOf(this.inputVariables[inputVariable]) == 0;
+            urlAddition += (!firstItem ? "&" : "?") + this.inputVariables[inputVariable].name + "=" + this.inputVariables[inputVariable].value;
+        }
+
+        console.log(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition);
+
+        // haal de display variables op
+        loadDataFromUrl(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
+            if (data == "no-data") {
+                // als de data niet opgehaald kon worden, geef een error en stop de functie
+                alert("Er is iets fout gegaan bij het ophalen van de data, probeer het later opnieuw. \n het kan zijn dat het profiel privé is of dat de gebruiker niet bestaat.");
+                this.remove();
+                return;
+            }
+
+            // als de data een gelimiteerd aantal items heeft, sla de originele lengte op voor de paginering
+            if (data.originalLength) {
+                this.dataArrayLength = parseInt(data.originalLength);
+                console.log(this.dataArrayLength)
+            }
+
+            // ga door alle display variables heen, en sla de overeenkomende data uit de api op in de displayVariables array
+            if (!this.type.dataIsArray) {
+                for (const displayVariable in this.type.displayVariables) {
+                    this.displayVariables.push({
+                        type: this.type.displayVariables[displayVariable],
+                        name: this.type.displayVariableNames[displayVariable],
+                        value: data[displayVariable]
+                    });
+                }
+            }
+
+            if (this.type.dataIsArray) {
+                let dataArray = data;
+                for (const location of this.type.arrayLocation) {
+                    dataArray = dataArray[location];
+                }
+
+                // ga door dataArray heen
+                for (const d of dataArray) {
+                    for (const displayVariable in this.type.displayVariables) {
+                        this.displayVariables.push({
+                            type: this.type.displayVariables[displayVariable],
+                            name: this.type.displayVariableNames[displayVariable],
+                            value: d[displayVariable]
+                        });
+                    }
+                }
+            }
+
+            // als er een update nodig is, update het blok
+            if (doUpdate) {
+                this.update();
+            }
+        });
+    }
+
     update() {
         // maak het blok leeg
         this.element.innerHTML = "";
@@ -268,7 +313,12 @@ class Blok {
         // voeg de loading class toe aan het blok
         this.element.classList.add('loading');
 
-        if (this.inputVariables.length > 0) {
+        // voeg elementen toe aan het blok
+        this.title = document.createElement('h2');
+        this.title.innerHTML = this.type.name + " van <span class='titleName'>laden...</span>";
+
+        // pas de titel aan als er een naam moet worden weergegeven
+        if (this.type.showFromInTitle) {
             this.steamidToName(this.inputVariables[0].value, this.title.querySelector('.titleName')).then(() => {
                 if (this.type.dataIsArray) {
                     let amount = this.displayVariables.length / Object.keys(this.type.displayVariables).length;
@@ -278,12 +328,24 @@ class Blok {
         } else {
             this.title.innerHTML = this.type.name;
         }
+
+        // voeg een knop toe om het blok te verwijderen
+        this.removeButton = document.createElement('button');
+        this.removeButton.innerHTML = "<img src='./assets/x-icon.svg' alt='remove'>";
+        this.removeButton.classList.add('removeButton');
+        this.removeButton.addEventListener('click', () => {
+            this.remove();
+            // sla blokken op
+            saveBlocks();
+        });
+        this.title.appendChild(this.removeButton);
+
         this.element.appendChild(this.title);
 
         this.createElement(this.type.displayType, null, this.element);
 
         // als er een tabel is, en er meer dan 1 pagina is, voeg dan de navigatie toe
-        if (this.type.displayType == "table" && Math.ceil(this.displayVariables.length / this.tableLimit) > 1) {
+        if (this.type.displayType == "table" && Math.ceil(this.displayVariables.length / this.dataLimit) > 1) {
             this.createElement("tableNav", null, this.element);
         }
 
@@ -293,23 +355,33 @@ class Blok {
 
     changePage(page) {
         // als de pagina niet veranderd, doe dan niks
-        if (this.tablePage == page) {
+        if (this.dataPage == page) {
             return;
         }
 
         // als de pagina wel veranderd, verander de pagina
-        this.tablePage = page;
+        this.dataPage = page;
 
         // check of de pagina niet te hoog / laag is
-        if (this.tablePage < 0) {
-            this.tablePage = 0;
-        }
-        if (this.tablePage > Math.ceil(this.displayVariables.length / this.tableLimit) - 1) {
-            this.tablePage = Math.ceil(this.displayVariables.length / this.tableLimit) - 1;
+        if (this.dataPage < 0) {
+            this.dataPage = 0;
         }
 
-        // update het blok
-        this.update();
+        if (this.dataArrayLength == this.dataLimit) {
+            if (this.dataPage > Math.ceil(this.displayVariables.length / this.dataLimit) - 1) {
+                this.dataPage = Math.ceil(this.displayVariables.length / this.dataLimit) - 1;
+            }
+
+            // update het blok
+            this.update();
+        } else {
+            // gebruik de originele lengte van de data array om te checken of de pagina niet te hoog is
+            if (this.dataPage > Math.ceil(this.dataArrayLength / this.dataLimit) - 1) {
+                this.dataPage = Math.ceil(this.dataArrayLength / this.dataLimit) - 1;
+            }
+            // update de display variables
+            this.getDisplayVariables();
+        }
     }
     remove() {
         // haal het blok uit de huidigeBlocks array

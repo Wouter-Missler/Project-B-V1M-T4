@@ -80,10 +80,28 @@ def recentlyplayedgames():
 
 @app.route("/api/loadjson")
 def loadJson():  # route wordt gebruikt om de blocktypes op te halen
+    # haal de limiet op uit de url
+    limiet = request.args.get("limit")
+
+    # haal de offset op uit de url
+    offset = request.args.get("offset")
+    # als offset niet is doorgegeven, zet hem dan op 0
+    if offset is None:
+        offset = 0
+
     # haal de data op uit blockTypes.json
     f = open(app.root_path+"/steam.json")
     data = json.load(f)
-    return data
+
+    # haal de lengte van het originele bestand op
+    dataLen = len(data)
+
+    # als er een limiet is opgegeven, haal dan alleen die data op
+    if limiet is not None:
+        data = data[int(offset):int(limiet)+int(offset)]
+
+    # return de data en de lengte van het originele bestand
+    return {"data": data, "originalLength": dataLen}
 
 
 # route wordt gebruikt om de blockSaved.json op te halen
