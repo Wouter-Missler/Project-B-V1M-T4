@@ -166,4 +166,4 @@ def picodata():
     path = app.root_path + "/Hardware/picoData.json"
     f = open(path, "r")
     data = json.load(f)
-    return "<p>test</p>"
+    return data
