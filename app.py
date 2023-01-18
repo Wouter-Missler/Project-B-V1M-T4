@@ -160,9 +160,10 @@ def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
 
     return data
 
+
 @app.route("/pico")
 def picodata():
     path = app.root_path + "/Hardware/picoData.json"
     f = open(path, "r")
     data = json.load(f)
-    return data
+    return "Test"
