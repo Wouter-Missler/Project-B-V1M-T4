@@ -159,3 +159,9 @@ def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     infile.close()
 
     return data
+
+@app.route("/pico")
+def picodata():
+    f = open(app.root_path + "/Hardware/picoData.json")
+    data = json.load(f)
+    return data

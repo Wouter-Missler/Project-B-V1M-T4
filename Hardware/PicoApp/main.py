@@ -17,8 +17,9 @@ lcd.clear()
 fade(lcd, fade_in=True)
 
 while True:
+    data = input()
     lcd.clear()
     lcd.printout("Vrienden online")
-    data = input()
+    #data = input()
     lcd.at(0, 1).printout(data)
-    sleep(1)
+    sleep(0.1)

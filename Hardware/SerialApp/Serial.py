@@ -1,21 +1,13 @@
 import requests
 from serial.tools import list_ports
 import serial
+import time
 from time import sleep
-from flask import Flask, request
-from flask_cors import CORS
+import json
 
 key = "EB385AB42E26CF8504625DB7C66DC187"
 accstatlink = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={}&format=json&steamids=STEAMID".format(key)
 steamid = "76561198086298135"
-
-app = Flask(__name__)  # instanite van de Flask class
-CORS(app)
-
-#test
-@app.route("/titest")
-def test():
-    return "<p>Ti Test </p>"
 
 def getfriendids(apikey):
     """"
@@ -62,6 +54,22 @@ def read_serial(port):
     print(line.decode())
     return line.decode()
 
+def datatojson(data):
+    teversturen = {
+        "steamids": {
+            "76561198086298135" : {
+                "onlinefriends" : {
+                    "aantal" : data[0]
+                }
+            }
+        }
+    }
+    with open('picoData.json', 'w') as outfile:
+        json.dump(teversturen, outfile)
+        print('data verzonden.')
+    return
+
+
 serialports = list_ports.comports()  # pakt een lijst van comports
 
 for i, port in enumerate(serialports):  # laat alle ports zien
@@ -85,10 +93,12 @@ with serial.Serial(port=picoport, baudrate=115200, bytesize=8, parity='N', stopb
             friendids = getfriendids(key)
             waarvanonline = len(getonlinefriends(friendids, key))
             data = "{}\r".format(waarvanonline)
+            #serialport.write(data.encode())
+            datatojson([waarvanonline])
+            sleep(5)
             serialport.write(data.encode())
-            sleep(0.1)
 
-    except KeyboardInterrupt:  # op keyboardinterrupt sluit hij de poort
+    except KeyboardInterrupt:  # op keyboardinterrupt sluit hij de poort1
         print("Afsluiten")
     finally:
         serialport.close()
