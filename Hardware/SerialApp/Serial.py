@@ -34,7 +34,7 @@ def getfriendids(steamid):
         steamids.append(friend['steamid'])
     return steamids
 
-def getonlinefriends(steamids, apikey):
+def getonlinefriends(steamids):
     """"
     Functie voor het ophalen welke vrienden online zijn
     ARGs:
@@ -42,10 +42,29 @@ def getonlinefriends(steamids, apikey):
     Returns:
         List met realnames van online vrienden
     """
-    response = requests.get("{}{}".format("http://127.0.0.1:5000/api/onlineplayers?steamIDs=", steamids))
+    response = requests.get("{}{}{}".format(apilink, "/api/onlineplayers?steamIDs=", steamids))
     players = response.json()
 
     return players
+
+
+def checkchange(steamid):
+    global waarvanonline
+    kwamonline = []
+    newlist = getonlinefriends(getfriendids(steamid))
+    for player in newlist:
+        if player not in waarvanonline:
+            kwamonline.append(player)
+    waarvanonline = newlist
+    print(kwamonline)
+    if kwamonline:
+        for player in kwamonline:
+            data = "{}\n is online\r".format(player)
+            return data
+        else:
+            return False
+
+
 
 def read_serial(port):
     """"
@@ -80,6 +99,8 @@ def datatojson(data):
 
 serialports = list_ports.comports()  # pakt een lijst van comports
 steamid = askID()
+friendids = getfriendids(steamid)
+waarvanonline = getonlinefriends(friendids)
 
 for i, port in enumerate(serialports):  # laat alle ports zien
     print(str(i) + ". " + str(port.device))
@@ -95,13 +116,14 @@ with serial.Serial(port=picoport, baudrate=115200, bytesize=8, parity='N', stopb
     else:
         print("Serial port ", serialport.name, " openen")
         serialport.open()
-        print(len(getonlinefriends(getfriendids(steamid), key)))
+        print(len(getonlinefriends(getfriendids(steamid))))
 
     try:
         while True:  # verstuurd aantal online vrienden naar de pico
-            friendids = getfriendids(steamid)
-            waarvanonline = len(getonlinefriends(friendids, key))
-            data = "{}\r".format(waarvanonline)
+            data = "Online: {}\r".format(len(waarvanonline))
+            check = checkchange(steamid)
+            if check:
+                data = check
             serialport.write(data.encode())
             sleep(5)
             serialport.write(data.encode())
