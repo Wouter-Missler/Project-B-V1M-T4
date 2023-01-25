@@ -7,17 +7,26 @@ import json
 
 key = "EB385AB42E26CF8504625DB7C66DC187"
 accstatlink = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={}&format=json&steamids=STEAMID".format(key)
-steamid = "76561198086298135"
+apilink = "http://woutm.eu.pythonanywhere.com"
+# test id = "76561198086298135"
 
-def getfriendids(apikey):
+
+def askID():
+    """"
+    Functie voor het vragen naar een steamid
+    """
+    id = input("wat is uw steamID?: ")
+    return id
+
+
+def getfriendids(steamid):
     """"
     Functie voor het ophalen van friendids
-    ARGs:
-        Apikey = de SteamAPI key
+
     Returns:
-        list met steamid's
+        list met steamid's van friends
     """
-    response = requests.get("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={}&steamid={}&relationship=friend".format(apikey, steamid))
+    response = requests.get("{}{}{}".format(apilink, "/api/getfriendlist?steamID=", steamid))
     resjson = response.json()
     friendlist = resjson['friendslist']
     steamids = []
@@ -33,14 +42,10 @@ def getonlinefriends(steamids, apikey):
     Returns:
         List met realnames van online vrienden
     """
-    response = requests.get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={}&format=json&steamids={}".format(apikey, steamids))
+    response = requests.get("{}{}".format("http://127.0.0.1:5000/api/onlineplayers?steamIDs=", steamids))
     players = response.json()
-    players = players['response']['players']
-    onlineplayers = []
-    for player in players:
-        if player['personastate'] == 1:
-            onlineplayers.append(player['realname'])
-    return onlineplayers
+
+    return players
 
 def read_serial(port):
     """"
@@ -55,6 +60,9 @@ def read_serial(port):
     return line.decode()
 
 def datatojson(data):
+    """"
+    testfunctie
+    """
     teversturen = {
         "steamids": {
             "76561198086298135" : {
@@ -71,11 +79,12 @@ def datatojson(data):
 
 
 serialports = list_ports.comports()  # pakt een lijst van comports
+steamid = askID()
 
 for i, port in enumerate(serialports):  # laat alle ports zien
     print(str(i) + ". " + str(port.device))
 
-picoportkeuze = int(input("Met welke poort is je pico verbonden?"))
+picoportkeuze = int(input("Met welke poort is je pico verbonden? "))
 picoport = serialports[picoportkeuze].device
 
 print(picoport)
@@ -86,15 +95,14 @@ with serial.Serial(port=picoport, baudrate=115200, bytesize=8, parity='N', stopb
     else:
         print("Serial port ", serialport.name, " openen")
         serialport.open()
-        print(len(getonlinefriends(getfriendids(key), key)))
+        print(len(getonlinefriends(getfriendids(steamid), key)))
 
     try:
         while True:  # verstuurd aantal online vrienden naar de pico
-            friendids = getfriendids(key)
+            friendids = getfriendids(steamid)
             waarvanonline = len(getonlinefriends(friendids, key))
             data = "{}\r".format(waarvanonline)
-            #serialport.write(data.encode())
-            datatojson([waarvanonline])
+            serialport.write(data.encode())
             sleep(5)
             serialport.write(data.encode())
 
