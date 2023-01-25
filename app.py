@@ -44,7 +44,7 @@ def playersum():
     return returnData
 
 @app.route("/api/onlineplayers")
-def onlineplayers():
+def online():
     #haal de steamids uit de url
     steamids = request.args.get("steamIDs")
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}&format=json".format(
@@ -59,12 +59,12 @@ def onlineplayers():
     if (players == []):
         return "no-data"
 
-    onlineplayers = []
+    onplayers = []
     for player in players:
         if player['personastate'] == 1:
-            onlineplayers.append(player['realname'])
+            onplayers.append(player['realname'])
 
-    return onlineplayers
+    return onplayers
 
 
 @app.route("/api/getfriendlist")  # maak een route naar de friendlist api
