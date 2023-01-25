@@ -64,7 +64,7 @@ def online():
         if player['personastate'] == 1:
             onplayers.append(player['realname'])
 
-    return onplayers
+    return tuple(onplayers)
 
 
 @app.route("/api/getfriendlist")  # maak een route naar de friendlist api
