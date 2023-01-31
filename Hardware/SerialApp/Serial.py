@@ -4,11 +4,13 @@ import serial
 import time
 from time import sleep
 import json
+import mysql.connector
 
 key = "EB385AB42E26CF8504625DB7C66DC187"
 accstatlink = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={}&format=json&steamids=STEAMID".format(key)
 apilink = "http://woutm.eu.pythonanywhere.com"
 # test id = "76561198086298135"
+dbhostname = "WoutM.mysql.eu.pythonanywhere-services.com"
 
 
 def askID():
@@ -18,6 +20,39 @@ def askID():
     id = input("wat is uw steamID?: ")
     return id
 
+def sendData(query):
+    """"
+    Functie voor het versturen van data naar de database
+    """
+    db = mysql.connector.connect(
+        host="sql7.freemysqlhosting.net",
+        user="sql7594625",
+        passwd="KVtzBMv5fB",
+        db="sql7594625"
+    )
+    c = db.cursor()
+    c.execute(query)
+    c.commit()
+    c.close()
+    db.close()
+    print("data verzonden")
+
+def askData(query):
+    """"
+    Functie voor het vragen naar data uit de database
+    """
+    db = mysql.connector.connect(
+        host="sql7.freemysqlhosting.net",
+        user="sql7594625",
+        passwd="KVtzBMv5fB",
+        db="sql7594625"
+    )
+    c = db.cursor()
+    c.execute(query)
+    data = c.fetchall()
+    c.close()
+    db.close()
+    return data
 
 def getfriendids(steamid):
     """"
