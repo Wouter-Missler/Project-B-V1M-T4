@@ -35,3 +35,4 @@ Om het dashboard lokaal te runnen moet je de volgende stappen doorlopen:
 2. installeer de volgende libraries: flask, flask-cors, mysql-connector-python, json, requests, dit kan door de commando's ``pip install flask``, ``pip install flask-cors``, ``pip install mysql-connector-python``, ``pip install json``, ``pip install requests`` te gebruiken.
 3. start de webserver door het commando ``flask app.py run`` te gebruiken in de terminal.
 4. gebruik een python webserver om de index.html te runnen. Dit kan door het commando ``python -m http.server`` te gebruiken in de terminal. Hiervoor moet je wel eerst in de terminal navigeren naar de map waar de index.html staat. Dit is vanuit de root dit pad: 'dashboard/public'.
+
