@@ -1,5 +1,6 @@
 from flask import Flask, request  # importeer de Flask class
 from flask_cors import CORS
+import mysql.connector
 import requests
 import json
 
@@ -190,3 +191,51 @@ def picodata():
     f = open(path, "r")
     data = json.load(f)
     return data
+
+@app.route("/db/afktijd")
+def afktijd():
+    steamID = request.args.get("steamID")
+
+
+    db = mysql.connector.connect(
+        host="sql7.freemysqlhosting.net",
+        user="sql7594625",
+        passwd="KVtzBMv5fB",
+        db="sql7594625"
+    )
+    c = db.cursor()
+    query = "SELECT afktijd FROM sessie\n" \
+            "WHERE gebruikersteamid = {};".format(steamID)
+    if steamID is None:
+        return "Geef steam id"
+
+    c.execute(query)
+    data = c.fetchall()
+    c.close()
+    db.close()
+    return data
+
+@app.route("/db/watergedronken")
+def watergedronken():
+    steamID = request.args.get("steamID")
+
+
+    db = mysql.connector.connect(
+        host="sql7.freemysqlhosting.net",
+        user="sql7594625",
+        passwd="KVtzBMv5fB",
+        db="sql7594625"
+    )
+    c = db.cursor()
+    query = "SELECT watergedronken FROM sessie\n" \
+            "WHERE gebruikersteamid = {};".format(steamID)
+    if steamID is None:
+        return "Geef steam id"
+
+    c.execute(query)
+    data = c.fetchall()
+    c.close()
+    db.close()
+    return data
+
+
