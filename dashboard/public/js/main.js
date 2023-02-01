@@ -214,7 +214,6 @@ searchInput.addEventListener("input", function () {
 
     // roep de apiURL+"/api/blockSearch" aan met de blockNames array als names en de searchValue als searchterm
     loadDataFromUrl(apiURL + "/api/blockSearch?names=" + blockNames + "&searchterm=" + searchValue).then(data => {
-        console.log(data);
         // loop door alle blokken
         document.querySelectorAll(".blok").forEach(block => {
             // check of de bloknaam de waarde van de search input bevat
@@ -233,8 +232,10 @@ function getBlockFullName(element) {
     // haal het stuk voor de span uit de bloknaam
     let blockName = element.querySelector("h2").innerHTML.split("<span")[0];
 
-    // voeg het deel in de span toe aan de bloknaam
-    blockName += element.querySelector("h2 span").innerHTML;
+    // voeg het deel in de span toe aan de bloknaam, als het bestaat
+    if (element.querySelector("h2 span") != null) {
+        blockName += element.querySelector("h2 span").innerHTML;
+    }
 
     // // maak alles lowercase
     // blockName = blockName.toLowerCase();
