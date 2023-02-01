@@ -1,5 +1,5 @@
 from flask import Flask, request  # importeer de Flask class
-from flask_cors import CORS
+from flask_cors import CORS,cross_origin
 import mysql.connector
 import requests
 import json

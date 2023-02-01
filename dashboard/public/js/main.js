@@ -3,7 +3,7 @@ let blockTypes; // houd de block types bij
 let huidigeBlocks = []; // houd de huidige blocks bij
 let apiURL = "https://woutm.eu.pythonanywhere.com"; // houd de api url bij
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-    apiURL = "http://localhost:5000"; // voor local testing
+    apiURL = "http://127.0.0.1:5000"; // voor local testing
 
 let steamidToNameCache = []; // houd een cache bij van steamid naar naam
 
