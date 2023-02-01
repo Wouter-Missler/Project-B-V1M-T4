@@ -43,14 +43,15 @@ def playersum():
 
     return returnData
 
+
 @app.route("/api/onlineplayers")
 def online():
-    #haal de steamids uit de url
+    # haal de steamids uit de url
     steamids = request.args.get("steamIDs")
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}&format=json".format(
         steamAPIKey, steamids)
 
-    #haal de data op
+    # haal de data op
     session = requests.Session()
     infile = session.get(url)
     data = infile.json()
@@ -182,6 +183,86 @@ def blocktypes():  # route wordt gebruikt om de blocktypes op te halen
     infile.close()
 
     return data
+
+
+@app.route("/api/blockSearch")
+def search():
+    # haal de zoekterm op uit de url
+    searchterm = request.args.get("searchterm")
+
+    # haal de namen op uit de url
+    names = request.args.get("names")
+
+    # sorteer de namen op alfabet
+    names = names.split(",")
+    names = mergeSort(names, searchterm)
+
+    # geef de gesorteerde namen terug, en als de score 0 is, haal de naam dan uit de lijst
+    names = [name for name in names if nameCompare(name, searchterm) > 0]
+
+    print(names)
+
+    # zoek de namen op de zoekterm
+    # names = searchNames(names, searchterm)
+
+    return json.dumps(names)
+
+
+def mergeSort(names, term):
+    # sorteer de namen op compare score met de zoekterm
+    if len(names) > 1:
+        mid = len(names)//2
+        left = names[:mid]
+        right = names[mid:]
+
+        mergeSort(left, term)
+        mergeSort(right, term)
+
+        i = j = k = 0
+
+        while i < len(left) and j < len(right):
+            if nameCompare(left[i], term) > nameCompare(right[j], term):
+                names[k] = left[i]
+                i += 1
+            else:
+                names[k] = right[j]
+                j += 1
+            k += 1
+
+        while i < len(left):
+            names[k] = left[i]
+            i += 1
+            k += 1
+
+        while j < len(right):
+            names[k] = right[j]
+            j += 1
+            k += 1
+
+    return names
+
+
+def nameCompare(name, term):
+    # vergelijk de naam met de zoekterm, en return een score op basis van de overeenkomsten
+    score = 0
+
+    # als de naam begint met de zoekterm, geef dan een hogere score
+    if name.startswith(term):
+        score += 10
+
+    # als de naam de zoekterm bevat, geef dan een hogere score
+    if term in name:
+        score += 5
+
+    # als de naam de zoekterm bevat, geef dan een hogere score
+    if term.lower() in name.lower():
+        score += 2
+
+    # als de naam de zoekterm bevat, geef dan een hogere score
+    if term.upper() in name.upper():
+        score += 1
+
+    return score
 
 
 @app.route("/pico")

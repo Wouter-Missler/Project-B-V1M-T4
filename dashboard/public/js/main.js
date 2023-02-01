@@ -185,3 +185,59 @@ function createBlock(type) {
     // maak een nieuwe block aan, deze wordt via de constructor toegevoegd aan de huidigeBlocks array
     let blok = new Blok(type);
 }
+
+const searchInput = document.getElementById("searchInput"); // input element voor het zoeken van blokken
+// voeg een onchange event listener toe aan de search input
+searchInput.addEventListener("input", function () {
+    // haal de waarde van de search input op
+    let searchValue = searchInput.value.toLowerCase();
+
+    // loop door alle blokken, en creeer een lijst van alle namen
+    let blockNames = [];
+    document.querySelectorAll(".blok").forEach(block => {
+        // check of de bloknaam de waarde van de search input bevat
+
+        // haal het stuk voor de span uit de bloknaam
+        let blockName = getBlockFullName(block);
+
+        // voeg de bloknaam toe aan de blockNames array
+        blockNames.push(blockName);
+    });
+
+    // als de searchValue leeg is, toon alle blokken
+    if (searchValue == "") {
+        document.querySelectorAll(".blok").forEach(block => {
+            block.style.display = "block";
+        });
+        return;
+    }
+
+    // roep de apiURL+"/api/blockSearch" aan met de blockNames array als names en de searchValue als searchterm
+    loadDataFromUrl(apiURL + "/api/blockSearch?names=" + blockNames + "&searchterm=" + searchValue).then(data => {
+        console.log(data);
+        // loop door alle blokken
+        document.querySelectorAll(".blok").forEach(block => {
+            // check of de bloknaam de waarde van de search input bevat
+            if (data.includes(getBlockFullName(block))) {
+                // toon het blok
+                block.style.display = "block";
+            } else {
+                // verberg het blok
+                block.style.display = "none";
+            }
+        });
+    });
+});
+
+function getBlockFullName(element) {
+    // haal het stuk voor de span uit de bloknaam
+    let blockName = element.querySelector("h2").innerHTML.split("<span")[0];
+
+    // voeg het deel in de span toe aan de bloknaam
+    blockName += element.querySelector("h2 span").innerHTML;
+
+    // // maak alles lowercase
+    // blockName = blockName.toLowerCase();
+
+    return blockName;
+}

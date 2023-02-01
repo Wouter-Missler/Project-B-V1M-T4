@@ -1,9 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap");
+
 * {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html:root {
@@ -28,12 +29,12 @@ header {
   display: -ms-grid;
   display: grid;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -ms-grid-columns: 1fr 1fr 1fr;
-      grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 header .logo {
@@ -43,11 +44,11 @@ header .logo {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 header .logo img {
@@ -63,8 +64,8 @@ header .search {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   padding: 0 10px;
 }
 
@@ -111,11 +112,11 @@ header .search button {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   cursor: pointer;
 }
 
@@ -124,14 +125,15 @@ header .right-group {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
 
-header .right-group > button, header .right-group .block-add > button {
+header .right-group>button,
+header .right-group .block-add>button {
   height: 45px;
   padding: 0 15px;
   background-color: var(--light-blue);
@@ -140,21 +142,23 @@ header .right-group > button, header .right-group .block-add > button {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   cursor: pointer;
   font-family: var(--main-font);
   font-weight: 500;
 }
 
-header .right-group > button:first-child, header .right-group .block-add > button:first-child {
+header .right-group>button:first-child,
+header .right-group .block-add>button:first-child {
   margin-left: auto;
 }
 
-header .right-group > button i, header .right-group .block-add > button i {
+header .right-group>button i,
+header .right-group .block-add>button i {
   margin-left: 5px;
   color: var(--darkest-blue);
   font-size: 18px;
@@ -176,25 +180,25 @@ header .right-group .block-add .block-add-popup {
   text-align: center;
   opacity: 1;
   -webkit-transform-origin: top;
-          transform-origin: top;
+  transform-origin: top;
   -webkit-transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
   transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
   transition: transform .2s ease-out, opacity .2s ease-out;
   transition: transform .2s ease-out, opacity .2s ease-out, -webkit-transform .2s ease-out;
   z-index: 2;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 header .right-group .block-add .block-add-popup.hidden {
   opacity: 0;
   pointer-events: none;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   -webkit-transform: scaleY(0);
-          transform: scaleY(0);
+  transform: scaleY(0);
 }
 
 header .right-group .block-add .block-add-popup::after {
@@ -223,8 +227,8 @@ header .right-group .block-add .block-add-popup .block-add-input {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   padding: 0 10px;
   margin-bottom: 15px;
 }
@@ -281,11 +285,11 @@ header .right-group .user {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   cursor: pointer;
   position: relative;
 }
@@ -301,7 +305,7 @@ header .right-group .user .user-avatar img {
   height: 100%;
   border-radius: 50%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border: 2px solid var(--darkest-blue);
 }
 
@@ -315,25 +319,25 @@ header .right-group .user .user-popup {
   text-align: center;
   opacity: 1;
   -webkit-transform-origin: top;
-          transform-origin: top;
+  transform-origin: top;
   -webkit-transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
   transition: opacity .2s ease-out, -webkit-transform .2s ease-out;
   transition: transform .2s ease-out, opacity .2s ease-out;
   transition: transform .2s ease-out, opacity .2s ease-out, -webkit-transform .2s ease-out;
   z-index: 2;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 header .right-group .user .user-popup.hidden {
   opacity: 0;
   pointer-events: none;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   -webkit-transform: scaleY(0);
-          transform: scaleY(0);
+  transform: scaleY(0);
 }
 
 header .right-group .user .user-popup::after {
@@ -396,7 +400,7 @@ section.blokken {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (minmax(500px, 1fr))[auto-fill];
-      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   grid-gap: 15px;
   padding: 4rem 10vw;
 }
@@ -413,11 +417,11 @@ section.blokken .blok {
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   position: relative;
 }
 
@@ -433,7 +437,7 @@ section.blokken .blok.loading::after {
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   color: var(--light-gray);
   font-size: 18px;
   font-weight: 600;
@@ -469,7 +473,7 @@ section.blokken .blok h2 .removeButton img {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 section.blokken .blok table {
@@ -506,8 +510,8 @@ section.blokken .blok .tableButtons {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   width: 100%;
   padding: 15px 45px 15px 45px;
   background-color: var(--dark-blue);
@@ -532,6 +536,7 @@ section.blokken .blok .tableButtons button img {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
+
 /*# sourceMappingURL=main.css.map */
