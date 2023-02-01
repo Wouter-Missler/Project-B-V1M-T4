@@ -232,6 +232,41 @@ class Blok {
             });
         }
 
+        if (type == "sessionGraph") {
+            // creer een grafiek
+            let graph = document.createElement('div');
+            graph.classList.add('graph');
+            toAppend = graph;
+
+            let labelsArray = [];
+            for (let i = 0; i < data.length; i++) {
+                labelsArray.push("Sessie " + (i + 1));
+            }
+
+            let graphData = {
+                labels: labelsArray,
+                datasets: [{
+                    label: 'Seconden in sessie',
+                    data: data,
+                    borderWidth: 1,
+                }]
+            }
+
+            console.log(graphData)
+
+            // maak de grafiek aan
+            let graphCanvas = document.createElement('canvas');
+            graphCanvas.width = 500;
+            graphCanvas.height = 200;
+            graph.appendChild(graphCanvas);
+
+            // maak de grafiek aan
+            let barGraph = createBarChart(graphData, graphCanvas);
+            barGraph.update();
+
+            console.log(barGraph);
+        }
+
         if (type == "freqGraph") {
             // creer een grafiek
             let graph = document.createElement('div');

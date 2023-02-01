@@ -305,7 +305,7 @@ def picodata():
     return data
 
 
-@app.route("/db/afktijd")
+@app.route("/api/afktijd")
 def afktijd():
     steamID = request.args.get("steamID")
 
@@ -325,10 +325,28 @@ def afktijd():
     data = c.fetchall()
     c.close()
     db.close()
-    return data
+
+    dataList = []
+    # haal de data uit de tuples en voeg ze toe aan dataList
+    for item in data:
+        dataList.append(item[0])
+
+    print(dataList)
+
+    return {
+        "sessions": dataList,
+        "mean": mean(dataList),
+        "range": rnge(dataList),
+        "median": median(dataList),
+        "q1": q1(dataList),
+        "q3": q3(dataList),
+        "var": var(dataList),
+        "std": std(dataList),
+        "modes": modes(dataList)
+    }
 
 
-@app.route("/db/watergedronken")
+@app.route("/api/watergedronken")
 def watergedronken():
     steamID = request.args.get("steamID")
 
