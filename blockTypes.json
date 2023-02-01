@@ -32,6 +32,20 @@
         "dataIsArray": true,
         "showFromInTitle": true,
         "dataLimit": 6,
+        "hasFilter": true,
+        "filterType": "equalTo",
+        "filterOptions": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "filterControls": "status",
+        "filterLocation": "2",
+        "filterAmount": "3",
         "arrayLocation": [
             "friendslist",
             "friends"
@@ -42,11 +56,13 @@
         "displayType": "table",
         "displayVariables": {
             "steamid": "p!steamidToName",
-            "friend_since": "p!unix"
+            "friend_since": "p!unix",
+            "status": "p!status"
         },
         "displayVariableNames": {
             "steamid": "Gebruikersnaam",
-            "friend_since": "Vrienden sinds"
+            "friend_since": "Vrienden sinds",
+            "status": "Status"
         }
     },
     {
@@ -82,6 +98,20 @@
         "dataIsArray": true,
         "showFromInTitle": false,
         "dataLimit": 8,
+        "hasFilter": true,
+        "filterType": "lessThan",
+        "filterOptions": [
+            "1",
+            "2",
+            "5",
+            "10",
+            "20",
+            "50",
+            "100"
+        ],
+        "filterControls": "price",
+        "filterLocation": "3",
+        "filterAmount": "4",
         "arrayLocation": [
             "data"
         ],
@@ -101,6 +131,68 @@
             "release_date": "Release datum",
             "developer": "Developer",
             "price": "Prijs"
+        }
+    },
+    {
+        "name": "Json-prijzen",
+        "apiType": "jsonPriceStats",
+        "dataIsArray": false,
+        "showFromInTitle": false,
+        "dataLimit": 9,
+        "inputVariables": {},
+        "displayType": "table",
+        "displayVariables": {
+            "mean": "p",
+            "range": "p",
+            "median": "p",
+            "q1": "p",
+            "q3": "p",
+            "var": "p",
+            "std": "p",
+            "modes": "p",
+            "freq": "freqGraph"
+        },
+        "displayVariableNames": {
+            "mean": "Gemiddelde",
+            "range": "Range",
+            "median": "Mediaan",
+            "q1": "Q1",
+            "q3": "Q3",
+            "var": "Variantie",
+            "std": "Standaardafwijking",
+            "modes": "Modus",
+            "freq": "Frequentie"
+        }
+    },
+    {
+        "name": "Json-review-verdeling",
+        "apiType": "jsonReviewStats",
+        "dataIsArray": false,
+        "showFromInTitle": false,
+        "dataLimit": 9,
+        "inputVariables": {},
+        "displayType": "table",
+        "displayVariables": {
+            "mean": "p",
+            "range": "p",
+            "median": "p",
+            "q1": "p",
+            "q3": "p",
+            "var": "p",
+            "std": "p",
+            "modes": "p",
+            "div": "divGraph"
+        },
+        "displayVariableNames": {
+            "mean": "Gemiddelde",
+            "range": "Range",
+            "median": "Mediaan",
+            "q1": "Q1",
+            "q3": "Q3",
+            "var": "Variantie",
+            "std": "Standaardafwijking",
+            "modes": "Modus",
+            "div": "Verdeling positief/negatief"
         }
     }
 ]

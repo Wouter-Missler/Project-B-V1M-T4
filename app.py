@@ -82,6 +82,30 @@ def friendlist():
     infile = session.get(url)
     data = infile.json()
 
+    # haal de status van de vrienden op via de getplayersummaries api
+    # maak een lijst met de steamIDs van de vrienden
+    friends = data["friendslist"]["friends"]
+    steamIDs = ""
+    for friend in friends:
+        steamIDs += friend["steamid"] + ","
+    steamIDs = steamIDs[:-1]
+
+    # haal de data op van de getplayersummaries api
+    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}&format=json".format(
+        steamAPIKey, steamIDs)
+
+    # haal de data op
+    session = requests.Session()
+    infile = session.get(url)
+    playerData = infile.json()
+
+    # zet de status van de vrienden in de data van de vrienden
+    for friend in friends:
+        for player in playerData["response"]["players"]:
+            if friend["steamid"] == player["steamid"]:
+                friend["status"] = player["personastate"]
+
+    # return de data
     return data
 
 
@@ -114,9 +138,16 @@ def loadJson():  # route wordt gebruikt om de blocktypes op te halen
     if offset is None:
         offset = 0
 
+    currentFilter = request.args.get("filter")
+    if currentFilter is None:
+        currentFilter = "10000"  # als er geen filter is doorgegeven, zet hem dan op 10000
+
     # haal de data op uit blockTypes.json
     f = open(app.root_path+"/steam.json")
     data = json.load(f)
+
+    # haal alle items waarbij de prijs lager is dan currentFilter, waarbij de prijs staat in de key "price"
+    data = [item for item in data if item["price"] <= int(currentFilter)]
 
     # haal de lengte van het originele bestand op
     dataLen = len(data)
@@ -273,10 +304,10 @@ def picodata():
     data = json.load(f)
     return data
 
+
 @app.route("/db/afktijd")
 def afktijd():
     steamID = request.args.get("steamID")
-
 
     db = mysql.connector.connect(
         host="sql7.freemysqlhosting.net",
@@ -296,10 +327,10 @@ def afktijd():
     db.close()
     return data
 
+
 @app.route("/db/watergedronken")
 def watergedronken():
     steamID = request.args.get("steamID")
-
 
     db = mysql.connector.connect(
         host="sql7.freemysqlhosting.net",
@@ -320,3 +351,275 @@ def watergedronken():
     return data
 
 
+@app.route("/api/jsonpricestats")
+def jsonPriceStats():
+    # haal de json data op met de json, en haal alleen de prijzen eruit
+    # haal de data op uit blockTypes.json
+    f = open(app.root_path+"/steam.json")
+    data = json.load(f)
+
+    # haal de prijzen eruit
+    prices = [item["price"] for item in data]
+
+    # maak een dictionary aan met de statistieken
+    stats = {
+        "mean": mean(prices),
+        "range": rnge(prices),
+        "median": median(prices),
+        "q1": q1(prices),
+        "q3": q3(prices),
+        "var": var(prices),
+        "std": std(prices),
+        "freq": freq(prices),
+        "modes": modes(prices)
+    }
+
+    # geef de statistieken terug
+    return stats
+
+
+@app.route("/api/jsonreviewstats")
+def jsonReviewStats():
+    # haal de json data op met de json, en haal alleen de prijzen eruit
+    # haal de data op uit blockTypes.json
+    f = open(app.root_path+"/steam.json")
+    data = json.load(f)
+
+    # haal de positieve / negatieve reviews eruit
+    positive = [item["positive_ratings"] for item in data]
+    negative = [item["negative_ratings"] for item in data]
+
+    # maak een score tussen 0 en 100 van de reviews, waar 0 = 0% positief, en 100 = 100% positief
+    reviews = [round((positive[i] / (positive[i] + negative[i])) * 100)
+               for i in range(len(positive))]
+
+    # maak een dictionary aan met de statistieken
+    stats = {
+        "mean": mean(reviews),
+        "range": rnge(reviews),
+        "median": median(reviews),
+        "q1": q1(reviews),
+        "q3": q3(reviews),
+        "var": var(reviews),
+        "std": std(reviews),
+        "modes": modes(reviews),
+        "div": {
+            "positive": positive,
+            "negative": negative
+        }
+    }
+
+    # geef de statistieken terug
+    return stats
+
+# ------------------------------------
+# STATISTIEK FUNCTIES - UIT FA3
+# ------------------------------------
+
+
+@app.route("/api/statistiek")
+def statistiek():
+    # haal de functie op uit de url
+    functie = request.args.get("functie")
+
+    # haal de data op uit de url
+    data = request.args.get("data")
+    data = data.split(",")  # split de data op komma's
+
+    # zet de data om naar integers
+    data = [int(item) for item in data]
+
+    # roep de functie aan
+    if functie == "mean":
+        return str(mean(data))
+    elif functie == "range":
+        return str(rnge(data))
+    elif functie == "median":
+        return str(median(data))
+    elif functie == "q1":
+        return str(q1(data))
+    elif functie == "q3":
+        return str(q3(data))
+    elif functie == "var":
+        return str(var(data))
+    elif functie == "std":
+        return str(std(data))
+    elif functie == "freq":
+        return str(freq(data))
+    elif functie == "modes":
+        return str(modes(data))
+
+    return "Geef een geldige functie op"
+
+
+def mean(lst):
+    """
+    Bepaal het gemiddelde van een lijst getallen.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        float: Het gemiddelde van de gegeven getallen.
+    """
+
+    # Som van alle getallen gedeeld door het aantal getallen
+    return sum(lst) / len(lst)
+
+
+def rnge(lst):
+    """
+    Bepaal het bereik van een lijst getallen.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        int: Het bereik van de gegeven getallen.
+    """
+
+    return int(max(lst) - min(lst))  # Grootste getal min het kleinste getal
+
+
+def median(lst):
+    """
+    Bepaal de mediaan van een lijst getallen.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        float: De mediaan van de gegeven getallen.
+    """
+
+    lst.sort()
+    if (len(lst) % 2 == 0):  # Even aantal getallen
+        return float(lst[int(len(lst) / 2)] + lst[int(len(lst) / 2) - 1]) / 2.0
+    else:  # Oneven aantal getallen
+        return float(lst[int(len(lst) / 2)])
+
+
+def q1(lst):
+    """
+    Bepaal het eerste kwartiel Q1 van een lijst getallen.
+
+    Hint: maak gebruik van `median()`
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        float: Het eerste kwartiel Q1 van de gegeven getallen.
+    """
+
+    lst.sort()
+    # Vanaf de eerste waarde tot de eerste waarde in de tweede helft
+    return median(lst[:int(len(lst) / 2)])
+
+
+def q3(lst):
+    """
+    Bepaal het derde kwartiel Q3 van een lijst getallen.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        float: Het derde kwartiel Q3 van de gegeven getallen.
+    """
+
+    lst.sort()
+    # Index van de eerste waarde in de tweede helft
+    fromIndex = int(len(lst) / 2)
+    if (len(lst) % 2 != 0):  # Oneven aantal getallen, dus een extra getal in de tweede helft
+        fromIndex += 1
+    return median(lst[fromIndex:])  # Vanaf de eerste waarde in de tweede helft
+
+
+def var(lst):
+    """
+    Bepaal de variantie van een lijst getallen.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        float: De variantie van de gegeven getallen.
+    """
+
+    return sum([(x - mean(lst)) ** 2 for x in lst]) / len(lst)
+    # voor elk getal in de lijst, het verschil tussen het getal en het gemiddelde van de lijst (mean)
+    # daar het verschil van het kwadraat (**2) van nemen en dat bij elkaar optellen (sum)
+
+
+def std(lst):
+    """
+    Bepaal de standaardafwijking van een lijst getallen.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        float: De standaardafwijking van de gegeven getallen.
+    """
+
+    return var(lst) ** 0.5
+    # wortel van variantie
+
+
+def freq(lst):
+    """
+    Bepaal de frequenties van alle getallen in een lijst.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        dict: Een dictionary met als 'key' de waardes die voorkomen in de lijst
+            en als 'value' het aantal voorkomens (de frequentie) van die waarde.
+
+    Examples:
+        >> freq([0, 0, 4, 7, 7])
+        {0: 2, 4: 1, 7: 2}
+
+        >> freq([1, 1, 2, 3, 2, 1])
+        {1: 3, 2: 2, 3: 1}
+    """
+    freqs = dict()
+
+    for x in lst:  # Voor elk getal in de lijst
+        if x in freqs:  # Als het getal al in de dictionary zit
+            freqs[x] += 1  # Tel er 1 bij op
+        else:  # Anders
+            freqs[x] = 1  # Zet het getal in de dictionary met een waarde van 1
+
+    return freqs  # Geef de dictionary terug
+
+
+def modes(lst):
+    """
+    Bepaal alle modi van een lijst getallen.
+
+    Hint: maak gebruik van `freq()`.
+
+    Args:
+        lst (list): Een lijst met gehele getallen.
+
+    Returns:
+        list: Een gesorteerde lijst van de modi van de gegeven getallen.
+
+    Examples:
+        >> modes([0, 0, 4, 7, 7])
+        [0, 7]
+
+        >> modes([1, 1, 2, 3, 2, 1])
+        [1]
+    """
+    modi = []
+
+    for x in freq(lst):  # Voor elk getal in de dictionary
+        # Als het aantal voorkomens van het getal gelijk is aan het hoogste aantal voorkomens
+        if freq(lst)[x] == max(freq(lst).values()):
+            modi.append(x)  # Voeg het getal toe aan de lijst met modi
+
+    return sorted(modi)  # Geef de gesorteerde lijst met modi terug

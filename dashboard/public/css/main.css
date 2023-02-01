@@ -476,6 +476,31 @@ section.blokken .blok h2 .removeButton img {
   object-fit: cover;
 }
 
+section.blokken .blok .filter {
+  width: fit-content;
+  padding: 5px 15px;
+  margin: 15px 0 5px 45px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: var(--dark-blue);
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: var(--light-gray);
+}
+
+section.blokken .blok .graph {
+  width: 100%;
+  padding: 45px;
+}
+
 section.blokken .blok table {
   padding: 45px;
   padding-top: 15px;

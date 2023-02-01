@@ -6,6 +6,7 @@ class Blok {
         this.dataLimit = this.type.dataLimit;
         this.dataPage = 0;
         this.dataArrayLength = this.dataLimit;
+        this.filter = false;
 
         // voeg het blok toe aan de pagina
         this.element = document.createElement('div');
@@ -107,6 +108,14 @@ class Blok {
 
             // voeg de rijen toe gebaseerd op de displayVariables lijst
             for (let i = 0; i < Math.min(this.displayVariables.length, this.dataLimit); i++) {
+
+                // als de huidige display variable een type met graph erin heeft, skippen we deze
+                if (this.displayVariables[i].type.toLowerCase().includes("graph")) {
+                    let current = this.displayVariables[i];
+                    this.createElement(current.type, current.value, this.element);
+                    continue;
+                }
+
                 // haal current op, met de goeie pagina 
                 let currentIndex = i + this.dataPage * this.dataLimit;
                 if (this.dataArrayLength !== this.dataLimit) currentIndex = i;
@@ -184,6 +193,114 @@ class Blok {
             container.appendChild(nextButton);
         }
 
+        if (type == "filter") {
+            // create an options list
+            let options = document.createElement('select');
+            options.classList.add('filter');
+            toAppend = options;
+
+            // add the options
+            let option = document.createElement('option');
+            option.innerHTML = "Filter op " + this.type.filterControls;
+            option.value = "filter";
+            options.appendChild(option);
+
+            let filterOptions = this.type.filterOptions;
+            for (let i = 0; i < filterOptions.length; i++) {
+                let option = document.createElement('option');
+                option.innerHTML = filterOptions[i];
+                if (this.type.filterControls == "status") {
+                    let statusOptions = ["Offline", "Online", "Busy", "Away", "Snooze", "Looking to trade", "Looking to play"];
+                    option.innerHTML = statusOptions[filterOptions[i]];
+                }
+                if (this.type.filterControls == "price") {
+                    option.innerHTML = "< €" + filterOptions[i];
+                }
+                option.value = i;
+                options.appendChild(option);
+            }
+
+            // add the event listener
+            options.addEventListener('change', () => {
+                this.filter = options.value;
+                if (this.filter == "filter") {
+                    this.filter = false;
+                } else {
+                    this.filter = this.type.filterOptions[this.filter];
+                }
+                this.getDisplayVariables(true);
+            });
+        }
+
+        if (type == "freqGraph") {
+            // creer een grafiek
+            let graph = document.createElement('div');
+            graph.classList.add('graph');
+            toAppend = graph;
+
+            let graphData = {
+                labels: [],
+                datasets: [{
+                    label: 'Frequentie',
+                    data: data,
+                    borderWidth: 1,
+                }]
+            }
+
+            // maak de grafiek aan
+            let graphCanvas = document.createElement('canvas');
+            graphCanvas.width = 500;
+            graphCanvas.height = 200;
+            graph.appendChild(graphCanvas);
+
+            // maak de grafiek aan
+            let barGraph = createBarChart(graphData, graphCanvas);
+            barGraph.update();
+        }
+
+        if (type == "divGraph") {
+            // creer een grafiek
+            let graph = document.createElement('div');
+            graph.classList.add('graph');
+            toAppend = graph;
+
+            console.log(data);
+
+            // add data.positive together
+            let positive = 0;
+            for (let i = 0; i < data.positive.length; i++) {
+                positive += data.positive[i];
+            }
+
+            // add data.negative together
+            let negative = 0;
+            for (let i = 0; i < data.negative.length; i++) {
+                negative += data.negative[i];
+            }
+
+            let graphData = {
+                labels: [
+                    "Positief",
+                    "Negatief",
+                ],
+                datasets: [{
+                    label: 'Json-reviews',
+                    data: [positive, negative],
+                    borderWidth: 1,
+                }]
+            }
+
+            // maak de grafiek aan
+            let graphCanvas = document.createElement('canvas');
+            graphCanvas.width = 500;
+            graphCanvas.height = 500;
+            graph.appendChild(graphCanvas);
+
+            // maak de grafiek aan
+            let pieGraph = createPieChart(graphData, graphCanvas);
+            pieGraph.update();
+        }
+
         // als we nog iets speciaals moeten doen, doen we dat hier
         if (special == "unix") {
             // zet de unix timestamp om naar een datum
@@ -255,7 +372,9 @@ class Blok {
             urlAddition += (!firstItem ? "&" : "?") + this.inputVariables[inputVariable].name + "=" + this.inputVariables[inputVariable].value;
         }
 
-        console.log(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition);
+        if (this.filter && this.type.name == "Json-games") {
+            urlAddition += "&filter=" + this.filter;
+        }
 
         // haal de display variables op
         loadDataFromUrl(apiURL + "/api/" + this.type.apiType.toLowerCase() + urlAddition).then(data => {
@@ -301,6 +420,29 @@ class Blok {
                 }
             }
 
+            // als er een filter is, halen we de display variables op die overeenkomen met de filter
+            if (this.filter && this.type.hasFilter && this.type.name !== "Json-games") {
+                console.log(this.filter);
+                console.log(this.displayVariables);
+                let increment = parseInt(this.type.filterAmount);
+                let newArray = [];
+                for (let i = parseInt(this.type.filterLocation); i < this.displayVariables.length; i += increment) {
+                    // if (i > this.displayVariables.length - increment) break;
+                    console.log(i)
+                    if (
+                        this.type.filterType == "equalTo" && this.displayVariables[i].value == this.filter ||
+                        this.type.filterType == "lessThan" && this.displayVariables[i].value < this.filter
+                    ) {
+                        for (let j = -increment; j < 0; j++) {
+                            newArray.push(this.displayVariables[i + j + 1]);
+                        }
+                    }
+                }
+                this.displayVariables = newArray;
+
+                this.dataPage = 0;
+            }
+
             // als er een update nodig is, update het blok
             if (doUpdate) {
                 this.update();
@@ -309,6 +451,12 @@ class Blok {
     }
 
     update() {
+        // check of er een zoekterm is ingevuld, en sla deze op
+        let search = this.element.querySelector('.searchBar');
+        if (search && search.value != "") {
+            this.searchTerm = search.value;
+        }
+
         // maak het blok leeg
         this.element.innerHTML = "";
 
@@ -344,6 +492,11 @@ class Blok {
 
         this.element.appendChild(this.title);
 
+        // als er een filter is, voeg die dan toe
+        if (this.type.hasFilter) {
+            this.createElement("filter", null, this.element);
+        }
+
         this.createElement(this.type.displayType, null, this.element);
 
         // als er een tabel is, en er meer dan 1 pagina is, voeg dan de navigatie toe
@@ -353,6 +506,16 @@ class Blok {
 
         // haal de loading class van het blok
         this.element.classList.remove('loading');
+
+        // als er een filter is geselecteerd, zet de filter dan op de juiste waarde
+        if (this.filter) {
+            for (let i = 0; i < this.type.filterOptions.length; i++) {
+                if (this.type.filterOptions[i] == this.filter) {
+                    var foundFilter = i;
+                }
+            }
+            this.element.querySelector('.filter').value = foundFilter;
+        }
     }
 
     changePage(page) {
