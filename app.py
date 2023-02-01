@@ -331,8 +331,6 @@ def afktijd():
     for item in data:
         dataList.append(item[0])
 
-    print(dataList)
-
     return {
         "sessions": dataList,
         "mean": mean(dataList),
@@ -366,7 +364,23 @@ def watergedronken():
     data = c.fetchall()
     c.close()
     db.close()
-    return data
+
+    dataList = []
+    # haal de data uit de tuples en voeg ze toe aan dataList
+    for item in data:
+        dataList.append(item[0])
+
+    return {
+        "sessions": dataList,
+        "mean": mean(dataList),
+        "range": rnge(dataList),
+        "median": median(dataList),
+        "q1": q1(dataList),
+        "q3": q3(dataList),
+        "var": var(dataList),
+        "std": std(dataList),
+        "modes": modes(dataList)
+    }
 
 
 @app.route("/api/jsonpricestats")

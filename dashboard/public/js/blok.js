@@ -243,10 +243,15 @@ class Blok {
                 labelsArray.push("Sessie " + (i + 1));
             }
 
+            let label = 'Seconden per sessie';
+            if (this.type.name == "Water-Sessies") {
+                label = 'Liter water gedronken per sessie';
+            }
+
             let graphData = {
                 labels: labelsArray,
                 datasets: [{
-                    label: 'Seconden in sessie',
+                    label: label,
                     data: data,
                     borderWidth: 1,
                 }]
