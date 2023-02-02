@@ -243,7 +243,7 @@ class Blok {
                 labelsArray.push("Sessie " + (i + 1));
             }
 
-            let label = 'Seconden per sessie';
+            let label = 'Seconden AFK per sessie';
             if (this.type.name == "Water-Sessies") {
                 label = 'Liter water gedronken per sessie';
             }
